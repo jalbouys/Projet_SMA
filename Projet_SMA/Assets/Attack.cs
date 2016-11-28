@@ -32,14 +32,5 @@ public class Attack : MonoBehaviour {
         Debug.Log("Whack! ");
         Debug.Log(getInfo.hp);
         Debug.Log(" HP left\n");
-    
-    // Use this for initialization
-    void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        
     }
 }
