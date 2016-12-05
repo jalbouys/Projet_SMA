@@ -20,23 +20,13 @@ public class GetInfo : MonoBehaviour {
     {
         foreach (GameObject barbarian in GameObject.FindGameObjectsWithTag("Barbarian"))
         {barbarians.Add(barbarian);}
-        /*foreach (GameObject guard in GameObject.FindGameObjectsWithTag("Guard"))
-        {guards.Add(guard);}*/
+        foreach (GameObject guard in GameObject.FindGameObjectsWithTag("Guard"))
+        {guards.Add(guard);}
         foreach (GameObject villager in GameObject.FindGameObjectsWithTag("Villager"))
         {
             villagers.Add(villager);
             target = villager;
-
-            //Debug.Log("found villager\n");
         }
-        
-
-        foreach (GameObject barbarian in GameObject.FindGameObjectsWithTag("Barbarian"))
-        {barbarians.Add(barbarian);}
-        foreach (GameObject guard in GameObject.FindGameObjectsWithTag("Guard"))
-        {guards.Add(guard);}
-        foreach (GameObject villager in GameObject.FindGameObjectsWithTag("Villager"))
-        {villagers.Add(villager);}
     }
 	
 	// Update is called once per frame
