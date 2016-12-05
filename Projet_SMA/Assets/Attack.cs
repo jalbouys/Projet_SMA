@@ -35,7 +35,7 @@ public class Attack : MonoBehaviour {
 
     void attack(GameObject target)
     {
-        GetComponent<Animation>().Play("Lumbering");
+        GetComponent<Animation>().Play("Lumbering");//start attacking
         nextAttackTime = Time.time + attackTime;//time when the next attack can happen
         GetInfo getInfo = target.GetComponent<GetInfo>();
         getInfo.hp -= 10;//remove 10HP from victim
