@@ -2,8 +2,7 @@
 using System.Collections;
 
 public class GuardMoveTo : MonoBehaviour {
-
-    public GameObject personnage;
+    
     public Transform[] points;
     private int destPoint = 0;
     private NavMeshAgent agent;
@@ -18,7 +17,7 @@ public class GuardMoveTo : MonoBehaviour {
         // approaches a destination point).
         agent.autoBraking = false;
 
-        GotoNextPoint();
+       //GotoNextPoint();
     }
 
 
@@ -45,44 +44,42 @@ public class GuardMoveTo : MonoBehaviour {
         {
             Debug.Log("Attacked!");
         }
-        else if (agent.remainingDistance < 1f)
-            GotoNextPoint();
+       /* else if (agent.remainingDistance < 1f)
+            GotoNextPoint();*/
     }
 
-    public bool CanSeeEntity() {
- 
+    public bool CanSeeEntity(GameObject entity) {
+        
      int fieldOfViewRange = 60;
      RaycastHit hit;
-     Vector3 rayDirection = personnage.transform.position - transform.position;
-
-     if (Physics.Raycast(transform.position,rayDirection,out hit))
+     Vector3 rayDirection = entity.transform.position - transform.position;
+     if (Physics.Raycast(transform.position, rayDirection, out hit))
      { // If the player is very close behind the player and in view the enemy will detect the player
-
-            string tagName = hit.transform.tag;
-            if ((tagName == "Barbarian"))
+         if ((hit.transform.tag == "Barbarian"))
          {
-             Debug.Log("Alert! Attacker here!!");
              return true;
          }
      }
- 
-     if((Vector3.Angle(rayDirection, transform.forward)) < fieldOfViewRange){ // Detect if player is within the field of view
-         if (Physics.Raycast (transform.position, rayDirection, out hit)) {
+     if ((Vector3.Angle(rayDirection, transform.forward)) < fieldOfViewRange)
+     { // Detect if player is within the field of view
+         if (Physics.Raycast(transform.position, rayDirection, out hit))
+            {
 
-             string tagName = hit.transform.tag;
- 
-             if (tagName == "Barbarian") {
-                 Debug.Log("Can see Barbarian");
-                 return true;
-             }else{
-                 Debug.Log("Can not see any Barbarian");
-                 return false;
-             }
-         }
-     }
+                if (hit.transform.tag == "Barbarian")
+                {
+                    Debug.Log("Can see Barbarian");
+                    return true;
+                }
+                else
+                {
+                    Debug.Log("Can not see Barbarian");
+                    return false;
+                }
+            }
+        }
 
-     return false;
- }
+        return false;
+    }
 
 
 }
