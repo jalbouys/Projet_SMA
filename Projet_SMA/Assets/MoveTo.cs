@@ -12,9 +12,6 @@ public class MoveTo : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
-
-        
         Vector3 fwd = transform.TransformDirection(Vector3.forward);
         if (CanSeePlayer())
         {
