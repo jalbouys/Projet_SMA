@@ -17,7 +17,7 @@ public class GuardMoveTo : MonoBehaviour {
         // approaches a destination point).
         agent.autoBraking = false;
 
-       //GotoNextPoint();
+       GotoNextPoint();
     }
 
 
@@ -44,8 +44,8 @@ public class GuardMoveTo : MonoBehaviour {
         {
             Debug.Log("Attacked!");
         }
-       /* else if (agent.remainingDistance < 1f)
-            GotoNextPoint();*/
+       else if (agent.remainingDistance < 2f)
+            GotoNextPoint();
     }
 
     public bool CanSeeEntity(GameObject entity) {
