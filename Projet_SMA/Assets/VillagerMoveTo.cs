@@ -5,8 +5,7 @@ public class VillagerMoveTo : MonoBehaviour
 {
 
     public GameObject personnage;
-
-    //wandering variables
+    //wandering variable
     public float wanderRadius = 100;
     public float wanderTimer = 5;
 
@@ -38,9 +37,12 @@ public class VillagerMoveTo : MonoBehaviour
         }
         else//no enemy in sight => wander around
         {
+            Animator charAnim = GetComponent<Animator>();
+            charAnim.speed = 1;
             timer += Time.deltaTime;
             if (timer >= wanderTimer)
             {
+
                 Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
                 agent.SetDestination(newPos);
                 timer = 0;

@@ -18,7 +18,7 @@ public class Communication : MonoBehaviour {
         }
         else if (message == "move")
         {
-            transform.position = Vector3.MoveTowards(transform.position, personnage.transform.position, Time.deltaTime * 5);
+            //transform.position = Vector3.MoveTowards(transform.position, personnage.transform.position, Time.deltaTime * 5);
         }
     }
     // Use this for initialization
@@ -36,10 +36,10 @@ public class Communication : MonoBehaviour {
         foreach(GameObject barbarian in otherBarbarians)
         {
             var distance = Vector3.Distance(barbarian.transform.position, transform.position);
-            if(distance < 10)//if other barbarian is less than 10m away...
+            if(distance < 10 && barbarian.transform.position != transform.position)//if other barbarian is less than 10m away...
             {
-                Debug.Log("nearby\n");
-                barbarian.SendMessage("MessageReceived", "move");
+                //Debug.Log("nearby\n");
+                //barbarian.SendMessage("MessageReceived", "move");
                 //  transform.position = Vector3.MoveTowards(transform.position, barbarian.transform.position, Time.deltaTime * 5);
                // transform.position.Set(transform.position.x, transform.position.y, zheight);
 
