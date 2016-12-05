@@ -27,7 +27,7 @@ public class GetInfo : MonoBehaviour {
             villagers.Add(villager);
             target = villager;
 
-            Debug.Log("found villager\n");
+            //Debug.Log("found villager\n");
         }
         
 
