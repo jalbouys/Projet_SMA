@@ -20,6 +20,22 @@ public class GetInfo : MonoBehaviour {
     {
         foreach (GameObject barbarian in GameObject.FindGameObjectsWithTag("Barbarian"))
         {barbarians.Add(barbarian);}
+<<<<<<< HEAD
+=======
+        /*foreach (GameObject guard in GameObject.FindGameObjectsWithTag("Guard"))
+        {guards.Add(guard);}*/
+        foreach (GameObject villager in GameObject.FindGameObjectsWithTag("Villager"))
+        {
+            villagers.Add(villager);
+            target = villager;
+
+            //Debug.Log("found villager\n");
+        }
+        
+
+        foreach (GameObject barbarian in GameObject.FindGameObjectsWithTag("Barbarian"))
+        {barbarians.Add(barbarian);}
+>>>>>>> 2be758b3d9def0a918a30cada99f68f049965ac0
         foreach (GameObject guard in GameObject.FindGameObjectsWithTag("Guard"))
         {guards.Add(guard);}
         foreach (GameObject villager in GameObject.FindGameObjectsWithTag("Villager"))
