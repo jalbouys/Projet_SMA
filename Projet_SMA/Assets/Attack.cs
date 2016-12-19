@@ -43,17 +43,23 @@ public class Attack : MonoBehaviour {
                     attack(target);//whoop-ass
             }
         }
+        else if(target == null)
+        {
+            GetComponent<Animation>().Stop("Lumbering");//start attacking
+        }
     }
 
     void attack(GameObject target)
     {
         GetComponent<Animation>().Play("Lumbering");//start attacking
         nextAttackTime = Time.time + attackTime;//time when the next attack can happen
-        GetInfo getInfo = target.GetComponent<GetInfo>();
+        GetInfoVillager getInfo = target.GetComponent<GetInfoVillager>();
+        getInfo.agressors.Add(gameObject);
         getInfo.hp -= 10;//remove 10HP from victim
         getInfo.attacker = transform.gameObject;
         Debug.Log("Whack! ");
         Debug.Log(getInfo.hp);
         Debug.Log(" HP left\n");
     }
+
 }

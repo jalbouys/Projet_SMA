@@ -6,16 +6,17 @@ using System.Collections.Generic;
 /// gets list of all other agents on the field
 /// </summary>
 
-public class GetInfoBarbarian : MonoBehaviour
+public class GetInfoVillager : MonoBehaviour
 {
 
     public List<GameObject> barbarians = new List<GameObject>();
     public List<GameObject> guards = new List<GameObject>();
     public List<GameObject> villagers = new List<GameObject>();
+    public List<GameObject> agressors = new List<GameObject>();
     public int hp = 100;
     public GameObject target;//or target pos?
     public GameObject attacker;
-    public int fieldOfViewRange = 60;
+
 
     // Use this for initialization
     void Start()
@@ -26,14 +27,8 @@ public class GetInfoBarbarian : MonoBehaviour
         { guards.Add(guard); }
         foreach (GameObject villager in GameObject.FindGameObjectsWithTag("Villager"))
         {
-            if (CanSeeTarget(villager))
-            {
-                villagers.Add(villager);
-                target = villager;
-            }
+            villagers.Add(villager);
         }
-        GetComponent<MoveTo>().Target = target;
-        GetComponent<Attack>().Target = target;
     }
 
     // Update is called once per frame
@@ -47,42 +42,18 @@ public class GetInfoBarbarian : MonoBehaviour
         foreach (GameObject guard in GameObject.FindGameObjectsWithTag("Guard"))
         { guards.Add(guard); }
         foreach (GameObject villager in GameObject.FindGameObjectsWithTag("Villager"))
+        { villagers.Add(villager); }
+
+        Debug.Log(hp);
+
+        if(hp <= 0)
         {
-            if(CanSeeTarget(villager))
-                villagers.Add(villager);
-        }
-
-
-    }
-
-    
-
-    bool CanSeeTarget(GameObject target)
-    {
-        
-        RaycastHit hit;
-        Vector3 rayDirection = target.transform.position - transform.position;
-
-            if(Vector3.Angle(rayDirection,transform.forward) < fieldOfViewRange * 0.5f)
+            foreach (GameObject agressor in agressors)
             {
-                
-                if (Physics.Raycast(transform.position,rayDirection,out hit))
-                {
-                    Debug.Log("Tag : " + hit.transform.tag);
-                    if (hit.transform.tag == target.tag)
-                    {
-                        Debug.Log(target.tag);
-                        return true;
-                    }
-                    else
-                    {
-                        Debug.Log("See Nothing");
-                        return false;
-                    }
-                }
-
+                agressor.GetComponent<GetInfoBarbarian>().target = null;
             }
-            return false;
+            Destroy(gameObject);
+        }
     }
 
 }
