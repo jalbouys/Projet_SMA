@@ -42,4 +42,5 @@ public class GetInfo : MonoBehaviour {
         foreach (GameObject villager in GameObject.FindGameObjectsWithTag("Villager"))
         { villagers.Add(villager); }
 	}
+
 }

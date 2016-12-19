@@ -6,31 +6,43 @@ public class Attack : MonoBehaviour {
     public float nextAttackTime;
     public float attackTime = 1;//time it takes to do 1 attack
     BarbarianMoveTo moveToBar;
-    GetInfo getInfo;
+    MoveTo move;
+    private GameObject target = null;
+    public GameObject Target
+    {
+        get
+        {
+            return target;
+        }
+
+        set
+        {
+            target = value;
+        }
+    }
 
     // Use this for initialization
     void Start () {
         nextAttackTime = Time.time;
         moveToBar = GetComponent<BarbarianMoveTo>();
         moveToBar.moveToVillage();
-        getInfo = GetComponent<GetInfo>();
+        move = GetComponent<MoveTo>();
 
     }
 	
 	// Update is called once per frame
 	void Update () {
-        
-        foreach (GameObject pouet in getInfo.guards)
-        {
-            //moveToBar.CanSeeEntity(guard);
-        }
 
-        /*var distance = Vector3.Distance(getInfo.target.transform.position, transform.position);
-        if (distance < 2)//if close enough, attack
+        if (target != null)
         {
-            if(Time.time > nextAttackTime)
-                attack(getInfo.target);//whoop-ass
-        }*/
+            var distance = Vector3.Distance(target.transform.position, transform.position);
+            Debug.Log(distance);
+            if (distance < 2)//if close enough, attack
+            {
+                if (Time.time > nextAttackTime)
+                    attack(target);//whoop-ass
+            }
+        }
     }
 
     void attack(GameObject target)
