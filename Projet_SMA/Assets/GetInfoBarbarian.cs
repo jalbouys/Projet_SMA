@@ -13,7 +13,7 @@ public class GetInfoBarbarian : MonoBehaviour
     public List<GameObject> guards = new List<GameObject>();
     public List<GameObject> villagers = new List<GameObject>();
     public int hp = 100;
-    public GameObject target;//or target pos?
+    public GameObject target = null;//or target pos?
     public GameObject attacker;
     public int fieldOfViewRange = 60;
 
@@ -23,13 +23,21 @@ public class GetInfoBarbarian : MonoBehaviour
         foreach (GameObject barbarian in GameObject.FindGameObjectsWithTag("Barbarian"))
         { barbarians.Add(barbarian); }
         foreach (GameObject guard in GameObject.FindGameObjectsWithTag("Guard"))
-        { guards.Add(guard); }
+        {
+            if (CanSeeTarget(guard))
+            {
+                guards.Add(guard);
+                if (target == null)
+                    target = guard;
+            }
+        }
         foreach (GameObject villager in GameObject.FindGameObjectsWithTag("Villager"))
         {
             if (CanSeeTarget(villager))
             {
                 villagers.Add(villager);
-                target = villager;
+                if (target == null)
+                    target = villager;
             }
         }
         GetComponent<MoveTo>().Target = target;
@@ -45,17 +53,35 @@ public class GetInfoBarbarian : MonoBehaviour
         foreach (GameObject barbarian in GameObject.FindGameObjectsWithTag("Barbarian"))
         { barbarians.Add(barbarian); }
         foreach (GameObject guard in GameObject.FindGameObjectsWithTag("Guard"))
-        { guards.Add(guard); }
+        {
+            if (CanSeeTarget(guard))
+            {
+                guards.Add(guard);
+                if (target == null)
+                    target = guard;
+            }
+
+        }
         foreach (GameObject villager in GameObject.FindGameObjectsWithTag("Villager"))
         {
-            if(CanSeeTarget(villager))
+            if (CanSeeTarget(villager))
+            {
                 villagers.Add(villager);
+                if (target == null)
+                    target = villager;
+            }
         }
-
-
+        if (villagers.Count == 0 && guards.Count == 0)//Did not see anybody
+        { 
+            GetComponent<MoveTo>().Target = null;
+            GetComponent<Attack>().Target = null;
+        }
+        else
+        {
+            GetComponent<MoveTo>().Target = target;
+            GetComponent<Attack>().Target = target;
+        }
     }
-
-    
 
     bool CanSeeTarget(GameObject target)
     {

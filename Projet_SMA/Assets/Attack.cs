@@ -53,12 +53,13 @@ public class Attack : MonoBehaviour {
     {
         GetComponent<Animation>().Play("Lumbering");//start attacking
         nextAttackTime = Time.time + attackTime;//time when the next attack can happen
-        GetInfoVillager getInfo = target.GetComponent<GetInfoVillager>();
-        getInfo.agressors.Add(gameObject);
-        getInfo.hp -= 10;//remove 10HP from victim
-        getInfo.attacker = transform.gameObject;
+        GetInfoVillager targetInfo;
+        targetInfo = target.GetComponent<GetInfoVillager>();
+        targetInfo.agressors.Add(gameObject);
+        targetInfo.hp -= 10;//remove 10HP from victim
+        targetInfo.attacker = transform.gameObject;
         Debug.Log("Whack! ");
-        Debug.Log(getInfo.hp);
+        Debug.Log(targetInfo.hp);
         Debug.Log(" HP left\n");
     }
 
