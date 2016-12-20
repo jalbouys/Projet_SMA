@@ -17,7 +17,6 @@ public class GetInfoVillager : MonoBehaviour
     public GameObject target;//or target pos?
     public GameObject attacker;
 
-
     // Use this for initialization
     void Start()
     {
@@ -44,8 +43,7 @@ public class GetInfoVillager : MonoBehaviour
         foreach (GameObject villager in GameObject.FindGameObjectsWithTag("Villager"))
         { villagers.Add(villager); }
 
-        Debug.Log(hp);
-
+        //Debug.Log(hp);
         if(hp <= 0)
         {
             foreach (GameObject agressor in agressors)
@@ -55,5 +53,6 @@ public class GetInfoVillager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
 
 }

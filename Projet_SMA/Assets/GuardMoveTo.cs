@@ -7,6 +7,7 @@ public class GuardMoveTo : MonoBehaviour {
     private int destPoint = 0;
     private NavMeshAgent agent;
     public bool attacked = false;
+    private string debugMsg = "";
 
     // Use this for initialization
     void Start () {
@@ -40,9 +41,10 @@ public class GuardMoveTo : MonoBehaviour {
     {
         // Choose the next destination point when the agent gets
         // close to the current one.
+        debugMsg = "patrolling...";
         if (attacked == true)
         {
-            Debug.Log("Attacked!");
+            debugMsg = "Alert!";
         }
        else if (agent.remainingDistance < 2f)
             GotoNextPoint();
@@ -67,18 +69,31 @@ public class GuardMoveTo : MonoBehaviour {
 
                 if (hit.transform.tag == "Barbarian")
                 {
-                    Debug.Log("Can see Barbarian");
+                   // Debug.Log("Can see Barbarian");
                     return true;
                 }
                 else
                 {
-                    Debug.Log("Can not see Barbarian");
+                   // Debug.Log("Can not see Barbarian");
                     return false;
                 }
             }
         }
 
         return false;
+    }
+
+    //Smart debugger
+    void OnGUI()
+    {
+        Vector3 characterPos = Camera.main.WorldToScreenPoint(transform.position);
+        characterPos = new Vector3(Mathf.Clamp(characterPos.x, 0 + (100 / 2), Screen.width - (100 / 2)),
+                                           Mathf.Clamp(characterPos.y, 50, Screen.height),
+                                           characterPos.z);
+        GUILayout.BeginArea(new Rect((characterPos.x + 0) - (100 / 2), (Screen.height - characterPos.y) + 0, 100, 100));
+
+        GUI.Label(new Rect(0, 0, 100, 100), debugMsg);
+        GUILayout.EndArea();
     }
 
 

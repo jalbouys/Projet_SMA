@@ -16,7 +16,6 @@ public class GetInfoBarbarian : MonoBehaviour
     public GameObject target = null;//or target pos?
     public GameObject attacker;
     public int fieldOfViewRange = 60;
-
     // Use this for initialization
     void Start()
     {
@@ -71,7 +70,7 @@ public class GetInfoBarbarian : MonoBehaviour
                     target = villager;
             }
         }
-        if (villagers.Count == 0 && guards.Count == 0)//Did not see anybody
+        if ((villagers.Count == 0) && (guards.Count == 0))//Did not see anybody
         { 
             GetComponent<MoveTo>().Target = null;
             GetComponent<Attack>().Target = null;
@@ -94,10 +93,10 @@ public class GetInfoBarbarian : MonoBehaviour
                 
                 if (Physics.Raycast(transform.position,rayDirection,out hit))
                 {
-                    Debug.Log("Tag : " + hit.transform.tag);
+                    //Debug.Log("Tag : " + hit.transform.tag);
                     if (hit.transform.tag == target.tag)
                     {
-                        Debug.Log(target.tag);
+                        Debug.Log("Saw: " + target.tag);
                         return true;
                     }
                     else
@@ -111,4 +110,6 @@ public class GetInfoBarbarian : MonoBehaviour
             return false;
     }
 
+
 }
+

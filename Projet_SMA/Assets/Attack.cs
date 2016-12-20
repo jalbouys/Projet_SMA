@@ -36,7 +36,7 @@ public class Attack : MonoBehaviour {
         if (target != null)
         {
             var distance = Vector3.Distance(target.transform.position, transform.position);
-            Debug.Log(distance);
+            //Debug.Log(distance);
             if (distance < 2)//if close enough, attack
             {
                 if (Time.time > nextAttackTime)
@@ -45,7 +45,7 @@ public class Attack : MonoBehaviour {
         }
         else if(target == null)
         {
-            GetComponent<Animation>().Stop("Lumbering");//start attacking
+            GetComponent<Animation>().Stop("Lumbering");//stop attacking
         }
     }
 
@@ -58,9 +58,9 @@ public class Attack : MonoBehaviour {
         targetInfo.agressors.Add(gameObject);
         targetInfo.hp -= 10;//remove 10HP from victim
         targetInfo.attacker = transform.gameObject;
-        Debug.Log("Whack! ");
-        Debug.Log(targetInfo.hp);
-        Debug.Log(" HP left\n");
+        //Debug.Log("Whack! ");
+        //Debug.Log(targetInfo.hp);
+        //Debug.Log(" HP left\n");
     }
 
 }

@@ -10,6 +10,7 @@ public class MoveTo : MonoBehaviour {
 
     private float timer;
     private NavMeshAgent agent;
+    private string debugMsg = "";
 
     public GameObject Target
     {
@@ -36,12 +37,12 @@ public class MoveTo : MonoBehaviour {
         Vector3 fwd = transform.TransformDirection(Vector3.forward);
         if (Target != null) 
         {
+            debugMsg = "Target locked: " + target.tag;
             MoveToTarget(Target);
         }
         else// no enemy in sight => wander around
         {
-            Animator charAnim = GetComponent<Animator>();
-            charAnim.speed = 1;
+            debugMsg = "Wandering around...";
             timer += Time.deltaTime;
             if (timer >= wanderTimer)
             {
@@ -54,7 +55,6 @@ public class MoveTo : MonoBehaviour {
 
     void MoveToTarget(GameObject target)
     {
-        NavMeshAgent agent = GetComponent<NavMeshAgent>();
         agent.destination = target.transform.position;
 
         transform.LookAt(target.transform.position);
@@ -72,5 +72,18 @@ public class MoveTo : MonoBehaviour {
         NavMesh.SamplePosition(randDirection, out navHit, dist, layermask);
 
         return navHit.position;
+    }
+
+    //Smart debugger
+    void OnGUI()
+    {
+        Vector3 characterPos = Camera.main.WorldToScreenPoint(transform.position);
+        characterPos = new Vector3(Mathf.Clamp(characterPos.x, 0 + (100 / 2), Screen.width - (100 / 2)),
+                                           Mathf.Clamp(characterPos.y, 50, Screen.height),
+                                           characterPos.z);
+        GUILayout.BeginArea(new Rect((characterPos.x + 0) - (100 / 2), (Screen.height - characterPos.y) + 0, 100, 100));
+
+        GUI.Label(new Rect(0, 0, 100, 100), debugMsg);
+        GUILayout.EndArea();
     }
 }
