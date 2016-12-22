@@ -5,8 +5,9 @@ using System.Collections.Generic;
 public class Communication : MonoBehaviour {
 
     public List<GameObject> otherBarbarians;
-    public GameObject personnage;
+    public GameObject target;
     public int hp = 100;
+    public bool attacked = false;
 
     void MessageReceived(string message)
     {
@@ -19,6 +20,10 @@ public class Communication : MonoBehaviour {
         else if (message == "move")
         {
             //transform.position = Vector3.MoveTowards(transform.position, personnage.transform.position, Time.deltaTime * 5);
+        }
+        else if(message == "help")
+        {
+            //Si un 
         }
     }
     // Use this for initialization
@@ -38,6 +43,8 @@ public class Communication : MonoBehaviour {
             var distance = Vector3.Distance(barbarian.transform.position, transform.position);
             if(distance < 10 && barbarian.transform.position != transform.position)//if other barbarian is less than 10m away...
             {
+                if(hp < 50 && )
+                    barbarian.GetComponent<Communication>().MessageReceived("help");
                 //Debug.Log("nearby\n");
                 //barbarian.SendMessage("MessageReceived", "move");
                 //  transform.position = Vector3.MoveTowards(transform.position, barbarian.transform.position, Time.deltaTime * 5);

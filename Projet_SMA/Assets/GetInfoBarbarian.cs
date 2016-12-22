@@ -16,6 +16,7 @@ public class GetInfoBarbarian : MonoBehaviour
     public GameObject target = null;//or target pos?
     public GameObject attacker;
     public int fieldOfViewRange = 60;
+
     // Use this for initialization
     void Start()
     {
@@ -46,6 +47,8 @@ public class GetInfoBarbarian : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        GetComponent<Communication>().hp = hp;
+        GetComponent<Communication>().target = target;
         barbarians.Clear();
         guards.Clear();
         villagers.Clear();
@@ -74,11 +77,13 @@ public class GetInfoBarbarian : MonoBehaviour
         { 
             GetComponent<MoveTo>().Target = null;
             GetComponent<Attack>().Target = null;
+            GetComponent<Communication>().target = null;
         }
         else
         {
             GetComponent<MoveTo>().Target = target;
             GetComponent<Attack>().Target = target;
+            GetComponent<Communication>().target = target;
         }
     }
 
