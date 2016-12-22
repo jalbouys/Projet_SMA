@@ -59,16 +59,25 @@ public class GuardMoveTo : MonoBehaviour {
         {
             debugMsg = "Alert!";
         }
-       else if (agent.remainingDistance < 2f && patrolling)
+       else if ((agent.remainingDistance < 1.5f) && patrolling)
             GotoNextPoint();
 
-        if(target != null)
+        if(Target != null)
         {
-            debugMsg = "defending the village!";
-            patrolling = false;
-            MoveToTarget(target);
+            var distance = Vector3.Distance(Target.transform.position, transform.position);
+            if (distance > 5) //target too far to defend, keep position
+            {
+                debugMsg = "Alert intruders coming!";
+                patrolling = false;
+            }
+            else
+            {
+                debugMsg = "defending the village!";
+                patrolling = false;
+                MoveToTarget(target);
+            }
         }
-        if(target == null)
+        if(Target == null)
         {
             debugMsg = "patrolling...";
             patrolling = true;

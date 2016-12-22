@@ -113,12 +113,12 @@ public class GetInfoBarbarian : MonoBehaviour
                     //Debug.Log("Tag : " + hit.transform.tag);
                     if (hit.transform.tag == target.tag)
                     {
-                        Debug.Log("Saw: " + target.tag);
+                        //Debug.Log("Saw: " + target.tag);
                         return true;
                     }
                     else
                     {
-                        Debug.Log("See Nothing");
+                        //Debug.Log("Saw Nothing");
                         return false;
                     }
                 }

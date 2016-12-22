@@ -35,17 +35,17 @@ public class Defend : MonoBehaviour
     void Update()
     {
 
-        if (target != null)
+        if (Target != null)
         {
             var distance = Vector3.Distance(target.transform.position, transform.position);
-            Debug.Log(distance);
+            //Debug.Log(distance);
             if (distance < 2)//if close enough, attack
             {
                 if (Time.time > nextAttackTime)
                     attack(target);//whoop-ass
             }
         }
-        else if (target == null)
+        else if (Target == null)
         {
             //GetComponent<Animation>().Stop("Jump");//stop attacking
         }
@@ -61,9 +61,9 @@ public class Defend : MonoBehaviour
         targetInfo.agressors.Add(gameObject);
         targetInfo.hp -= 10;//remove 10HP from victim
         targetInfo.attacker = transform.gameObject;
-        Debug.Log("Whack! ");
-        Debug.Log(targetInfo.hp);
-        Debug.Log(" HP left\n");
+        //Debug.Log("Whack! ");
+        //Debug.Log(targetInfo.hp);
+        //Debug.Log(" HP left\n");
     }
 
 }
