@@ -38,7 +38,7 @@ public class GetInfoGuard : MonoBehaviour
         {
             villagers.Add(villager);
         }
-        GetComponent<GuardMoveTo>().target = target;
+        GetComponent<GuardMoveTo>().Target = target;
         GetComponent<Defend>().Target = target;
 
     }
@@ -66,7 +66,7 @@ public class GetInfoGuard : MonoBehaviour
 
         if (target != null)
         {
-            GetComponent<GuardMoveTo>().target = target;
+            GetComponent<GuardMoveTo>().Target = target;
             GetComponent<Defend>().Target = target;
         }
 

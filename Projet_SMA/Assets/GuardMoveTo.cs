@@ -8,8 +8,21 @@ public class GuardMoveTo : MonoBehaviour {
     private NavMeshAgent agent;
     public bool attacked = false;
     private string debugMsg = "";
-    public GameObject target;
+    private GameObject target;
     public bool patrolling = true;
+
+    public GameObject Target
+    {
+        get
+        {
+            return target;
+        }
+
+        set
+        {
+            target = value;
+        }
+    }
     // Use this for initialization
     void Start () {
         agent = GetComponent<NavMeshAgent>();
@@ -42,7 +55,6 @@ public class GuardMoveTo : MonoBehaviour {
     {
         // Choose the next destination point when the agent gets
         // close to the current one.
-        debugMsg = "patrolling...";
         if (attacked == true)
         {
             debugMsg = "Alert!";
@@ -52,11 +64,13 @@ public class GuardMoveTo : MonoBehaviour {
 
         if(target != null)
         {
+            debugMsg = "defending the village!";
             patrolling = false;
             MoveToTarget(target);
         }
         if(target == null)
         {
+            debugMsg = "patrolling...";
             patrolling = true;
         }
     }

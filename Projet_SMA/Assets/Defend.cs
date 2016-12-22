@@ -47,14 +47,14 @@ public class Defend : MonoBehaviour
         }
         else if (target == null)
         {
-            GetComponent<Animation>().Stop("Jump");//stop attacking
+            //GetComponent<Animation>().Stop("Jump");//stop attacking
         }
     }
 
     void attack(GameObject target)
     {
 
-        GetComponent<Animation>().Play("Jump");//start attacking
+        GetComponent<Animator>().Play("Jump");//start attacking
         nextAttackTime = Time.time + attackTime;//time when the next attack can happen
         GetInfoBarbarian targetInfo;
         targetInfo = target.GetComponent<GetInfoBarbarian>();
