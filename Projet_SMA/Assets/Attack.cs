@@ -45,12 +45,13 @@ public class Attack : MonoBehaviour {
         }
         else if(target == null)
         {
-            GetComponent<Animation>().Stop("Lumbering");//stop attacking
+            //GetComponent<Animation>().Stop("Lumbering");//stop attacking
         }
     }
 
     void attack(GameObject target)
     {
+        
         GetComponent<Animation>().Play("Lumbering");//start attacking
         nextAttackTime = Time.time + attackTime;//time when the next attack can happen
         GetInfoVillager targetInfo;
@@ -58,9 +59,9 @@ public class Attack : MonoBehaviour {
         targetInfo.agressors.Add(gameObject);
         targetInfo.hp -= 10;//remove 10HP from victim
         targetInfo.attacker = transform.gameObject;
-        //Debug.Log("Whack! ");
-        //Debug.Log(targetInfo.hp);
-        //Debug.Log(" HP left\n");
+        Debug.Log("Whack! ");
+        Debug.Log(targetInfo.hp);
+        Debug.Log(" HP left\n");
     }
 
 }

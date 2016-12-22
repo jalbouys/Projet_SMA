@@ -8,7 +8,8 @@ public class GuardMoveTo : MonoBehaviour {
     private NavMeshAgent agent;
     public bool attacked = false;
     private string debugMsg = "";
-
+    public GameObject target;
+    public bool patrolling = true;
     // Use this for initialization
     void Start () {
         agent = GetComponent<NavMeshAgent>();
@@ -46,41 +47,25 @@ public class GuardMoveTo : MonoBehaviour {
         {
             debugMsg = "Alert!";
         }
-       else if (agent.remainingDistance < 2f)
+       else if (agent.remainingDistance < 2f && patrolling)
             GotoNextPoint();
+
+        if(target != null)
+        {
+            patrolling = false;
+            MoveToTarget(target);
+        }
+        if(target == null)
+        {
+            patrolling = true;
+        }
     }
 
-    public bool CanSeeEntity(GameObject entity) {
-        
-     int fieldOfViewRange = 60;
-     RaycastHit hit;
-     Vector3 rayDirection = entity.transform.position - transform.position;
-     if (Physics.Raycast(transform.position, rayDirection, out hit))
-     { // If the player is very close behind the player and in view the enemy will detect the player
-         if ((hit.transform.tag == "Barbarian"))
-         {
-             return true;
-         }
-     }
-     if ((Vector3.Angle(rayDirection, transform.forward)) < fieldOfViewRange)
-     { // Detect if player is within the field of view
-         if (Physics.Raycast(transform.position, rayDirection, out hit))
-            {
+    void MoveToTarget(GameObject target)
+    {
+        agent.destination = target.transform.position;
 
-                if (hit.transform.tag == "Barbarian")
-                {
-                   // Debug.Log("Can see Barbarian");
-                    return true;
-                }
-                else
-                {
-                   // Debug.Log("Can not see Barbarian");
-                    return false;
-                }
-            }
-        }
-
-        return false;
+        transform.LookAt(target.transform.position);
     }
 
     //Smart debugger

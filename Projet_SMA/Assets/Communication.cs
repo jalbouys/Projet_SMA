@@ -43,7 +43,7 @@ public class Communication : MonoBehaviour {
             var distance = Vector3.Distance(barbarian.transform.position, transform.position);
             if(distance < 10 && barbarian.transform.position != transform.position)//if other barbarian is less than 10m away...
             {
-                if(hp < 50 && )
+                if(hp < 50 && attacked)
                     barbarian.GetComponent<Communication>().MessageReceived("help");
                 //Debug.Log("nearby\n");
                 //barbarian.SendMessage("MessageReceived", "move");

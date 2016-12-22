@@ -1,37 +1,69 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Defend : MonoBehaviour {
 
-    float nextAttackTime;
-    float attackTime = 1;//time it takes to do 1 attack
-    GuardMoveTo guardMoveTo;
-    GetInfo getInfoGuard;
-    // Use this for initialization
-    void Start () {
-        nextAttackTime = Time.time;
-        guardMoveTo = GetComponent<GuardMoveTo>();
-        getInfoGuard = GetComponent<GetInfo>();
-    }
-	
-	// Update is called once per frame
-	void Update () {
+public class Defend : MonoBehaviour
+{
 
-        foreach(GameObject barbarian in getInfoGuard.barbarians)
-        if (guardMoveTo.CanSeeEntity(barbarian))//if sees someone, stop patrolling
+    public float nextAttackTime;
+    public float attackTime = 1;//time it takes to do 1 attack
+    BarbarianMoveTo moveToBar;
+    MoveTo move;
+    private GameObject target = null;
+    public GameObject Target
+    {
+        get
         {
-            guardMoveTo.attacked = true;
+            return target;
+        }
+
+        set
+        {
+            target = value;
+        }
+    }
+
+    // Use this for initialization
+    void Start()
+    {
+        nextAttackTime = Time.time;
+
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+        if (target != null)
+        {
+            var distance = Vector3.Distance(target.transform.position, transform.position);
+            Debug.Log(distance);
+            if (distance < 2)//if close enough, attack
+            {
+                if (Time.time > nextAttackTime)
+                    attack(target);//whoop-ass
+            }
+        }
+        else if (target == null)
+        {
+            GetComponent<Animation>().Stop("Jump");//stop attacking
         }
     }
 
     void attack(GameObject target)
     {
+
+        GetComponent<Animation>().Play("Jump");//start attacking
         nextAttackTime = Time.time + attackTime;//time when the next attack can happen
-        GetInfo getInfo = target.GetComponent<GetInfo>();
-        getInfo.hp -= 10;//remove 10HP from victim
-        getInfo.attacker = transform.gameObject;
+        GetInfoBarbarian targetInfo;
+        targetInfo = target.GetComponent<GetInfoBarbarian>();
+        targetInfo.agressors.Add(gameObject);
+        targetInfo.hp -= 10;//remove 10HP from victim
+        targetInfo.attacker = transform.gameObject;
         Debug.Log("Whack! ");
-        Debug.Log(getInfo.hp);
+        Debug.Log(targetInfo.hp);
         Debug.Log(" HP left\n");
     }
+
 }

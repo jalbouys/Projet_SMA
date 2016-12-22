@@ -12,10 +12,12 @@ public class GetInfoBarbarian : MonoBehaviour
     public List<GameObject> barbarians = new List<GameObject>();
     public List<GameObject> guards = new List<GameObject>();
     public List<GameObject> villagers = new List<GameObject>();
+    public List<GameObject> agressors = new List<GameObject>();
     public int hp = 100;
     public GameObject target = null;//or target pos?
     public GameObject attacker;
     public int fieldOfViewRange = 60;
+    
 
     // Use this for initialization
     void Start()
@@ -84,6 +86,16 @@ public class GetInfoBarbarian : MonoBehaviour
             GetComponent<MoveTo>().Target = target;
             GetComponent<Attack>().Target = target;
             GetComponent<Communication>().target = target;
+        }
+
+
+        if (hp <= 0)
+        {
+            foreach (GameObject agressor in agressors)
+            {
+                agressor.GetComponent<GetInfoGuard>().target = null;
+            }
+            Destroy(gameObject);
         }
     }
 

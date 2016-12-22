@@ -14,20 +14,33 @@ public class GetInfoGuard : MonoBehaviour
     public List<GameObject> villagers = new List<GameObject>();
     public List<GameObject> agressors = new List<GameObject>();
     public int hp = 100;
-    public GameObject target;//or target pos?
+    public GameObject target = null;//or target pos?
     public GameObject attacker;
+    public int fieldOfViewRange = 60;
 
     // Use this for initialization
     void Start()
     {
         foreach (GameObject barbarian in GameObject.FindGameObjectsWithTag("Barbarian"))
-        { barbarians.Add(barbarian); }
+        {
+            if (CanSeeTarget(barbarian))
+            {
+                guards.Add(barbarian);
+                if (target == null)
+                    target = barbarian;
+            }
+        }
         foreach (GameObject guard in GameObject.FindGameObjectsWithTag("Guard"))
-        { guards.Add(guard); }
+        {
+            guards.Add(guard);
+        }
         foreach (GameObject villager in GameObject.FindGameObjectsWithTag("Villager"))
         {
             villagers.Add(villager);
         }
+        GetComponent<GuardMoveTo>().target = target;
+        GetComponent<Defend>().Target = target;
+
     }
 
     // Update is called once per frame
@@ -36,12 +49,26 @@ public class GetInfoGuard : MonoBehaviour
         barbarians.Clear();
         guards.Clear();
         villagers.Clear();
+        villagers.Clear();
         foreach (GameObject barbarian in GameObject.FindGameObjectsWithTag("Barbarian"))
-        { barbarians.Add(barbarian); }
+        {
+            if (CanSeeTarget(barbarian))
+            {
+                guards.Add(barbarian);
+                if (target == null)
+                    target = barbarian;
+            }
+        }
         foreach (GameObject guard in GameObject.FindGameObjectsWithTag("Guard"))
         { guards.Add(guard); }
         foreach (GameObject villager in GameObject.FindGameObjectsWithTag("Villager"))
         { villagers.Add(villager); }
+
+        if (target != null)
+        {
+            GetComponent<GuardMoveTo>().target = target;
+            GetComponent<Defend>().Target = target;
+        }
 
         //Debug.Log(hp);
         if (hp <= 0)
@@ -54,4 +81,31 @@ public class GetInfoGuard : MonoBehaviour
         }
     }
 
+    bool CanSeeTarget(GameObject target)
+    {
+
+        RaycastHit hit;
+        Vector3 rayDirection = target.transform.position - transform.position;
+
+        if (Vector3.Angle(rayDirection, transform.forward) < fieldOfViewRange * 0.5f)
+        {
+
+            if (Physics.Raycast(transform.position, rayDirection, out hit))
+            {
+                //Debug.Log("Tag : " + hit.transform.tag);
+                if (hit.transform.tag == target.tag)
+                {
+                    Debug.Log("Saw: " + target.tag);
+                    return true;
+                }
+                else
+                {
+                    Debug.Log("See Nothing");
+                    return false;
+                }
+            }
+
+        }
+        return false;
+    }
 }
