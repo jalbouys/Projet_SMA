@@ -45,7 +45,8 @@ public class Attack : MonoBehaviour {
         }
         else if(target == null)
         {
-            //GetComponent<Animation>().Stop("Lumbering");//stop attacking
+            GetComponent<Animation>().Stop("Lumbering");//stop attacking
+            GetComponent<Animation>().Play("Walk");//stop attacking
         }
     }
 

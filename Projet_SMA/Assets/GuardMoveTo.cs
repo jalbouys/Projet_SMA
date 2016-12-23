@@ -82,6 +82,7 @@ public class GuardMoveTo : MonoBehaviour {
         if(Target == null)
         {
             debugMsg = "patrolling...";
+            GetComponent<Animator>().Play("Walk");
             patrolling = true;
         }
     }

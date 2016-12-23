@@ -25,8 +25,8 @@ public class GetInfoGuard : MonoBehaviour
         {
             if (CanSeeTarget(barbarian))
             {
-                guards.Add(barbarian);
-                if (target == null)
+                barbarians.Add(barbarian);
+                if (target == null || IsClosest(barbarian, target))
                     target = barbarian;
             }
         }
@@ -54,8 +54,8 @@ public class GetInfoGuard : MonoBehaviour
         {
             if (CanSeeTarget(barbarian))
             {
-                guards.Add(barbarian);
-                if (target == null || (Vector3.Distance(barbarian.transform.position, transform.position) < Vector3.Distance(target.transform.position, transform.position)))
+                barbarians.Add(barbarian);
+                if (target == null || IsClosest(barbarian, target) )
                     target = barbarian;
             }
         }
@@ -107,5 +107,10 @@ public class GetInfoGuard : MonoBehaviour
 
         }
         return false;
+    }
+
+    bool IsClosest(GameObject current, GameObject prev)
+    {
+        return (Vector3.Distance(current.transform.position, transform.position) < Vector3.Distance(prev.transform.position, transform.position));
     }
 }

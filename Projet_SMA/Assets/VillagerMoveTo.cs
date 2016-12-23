@@ -9,10 +9,23 @@ public class VillagerMoveTo : MonoBehaviour
     public float wanderRadius = 100;
     public float wanderTimer = 5;
 
-    private Transform target;
+    private GameObject attacker = null;
     private NavMeshAgent agent;
     private float timer;
     private string debugMsg = "";
+
+    public GameObject Attacker
+    {
+        get
+        {
+            return attacker;
+        }
+
+        set
+        {
+            attacker = value;
+        }
+    }
 
     // Use this for initialization
     void Start()
@@ -27,19 +40,18 @@ public class VillagerMoveTo : MonoBehaviour
     {
 
         Vector3 fwd = transform.TransformDirection(Vector3.forward);
-        if (0 == 1)// CanSeePlayer())
+        if (attacker != null && Vector3.Distance(attacker.transform.position, transform.position)<10)
         {
-            //print("There is the player");
-
-            NavMeshAgent agent = GetComponent<NavMeshAgent>();
-            agent.destination = personnage.transform.position;
-
-            transform.LookAt(personnage.transform.position);
+            debugMsg = "Running away from ennemy!";
+            Vector3 direction = ((attacker.transform.position) - (transform.position)).normalized;
+            transform.rotation = Quaternion.LookRotation(transform.position - attacker.transform.position);
+            transform.position += -direction * 1 * Time.deltaTime;
         }
         else//no enemy in sight => wander around
         {
             debugMsg = "Wandering around...";
             Animator charAnim = GetComponent<Animator>();
+            charAnim.Play("Walk");
             charAnim.speed = 1;
             timer += Time.deltaTime;
             if (timer >= wanderTimer)
