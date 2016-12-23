@@ -55,7 +55,7 @@ public class GetInfoGuard : MonoBehaviour
             if (CanSeeTarget(barbarian))
             {
                 guards.Add(barbarian);
-                if (target == null)
+                if (target == null || (Vector3.Distance(barbarian.transform.position, transform.position) < Vector3.Distance(target.transform.position, transform.position)))
                     target = barbarian;
             }
         }

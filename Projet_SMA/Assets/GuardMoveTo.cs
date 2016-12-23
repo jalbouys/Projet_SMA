@@ -65,16 +65,18 @@ public class GuardMoveTo : MonoBehaviour {
         if(Target != null)
         {
             var distance = Vector3.Distance(Target.transform.position, transform.position);
-            if (distance > 5) //target too far to defend, keep position
+            if (distance > 4) //target too far to defend, keep position
             {
                 debugMsg = "Alert intruders coming!";
                 patrolling = false;
+                agent.destination = transform.position; //set the destination to current position, to force guard to stop
+                transform.LookAt(Target.transform.position); //look at the target coming
             }
             else
             {
                 debugMsg = "defending the village!";
                 patrolling = false;
-                MoveToTarget(target);
+                MoveToTarget(Target);
             }
         }
         if(Target == null)
