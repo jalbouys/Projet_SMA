@@ -11,9 +11,9 @@ public class ScenePreparation : MonoBehaviour {
     public List<GameObject> barbarians;
 
 	void Start () {
-        Debug.LogWarning(PlayerPrefs.GetInt("Villagers"));
-        Debug.LogWarning(PlayerPrefs.GetInt("Guards"));
-        Debug.LogWarning(PlayerPrefs.GetInt("Barbarians"));
+        Debug.LogWarning("Villagers: " + PlayerPrefs.GetInt("Villagers"));
+        Debug.LogWarning("Guards: " + PlayerPrefs.GetInt("Guards"));
+        Debug.LogWarning("Barbarians: " + PlayerPrefs.GetInt("Barbarians"));
 
         Random rnd = new Random();
 

@@ -93,7 +93,8 @@ public class GetInfoBarbarian : MonoBehaviour
         {
             foreach (GameObject agressor in agressors)
             {
-                agressor.GetComponent<GetInfoGuard>().target = null;
+                if (agressor != null)
+                    agressor.GetComponent<GetInfoGuard>().target = null;
             }
             Destroy(gameObject);
         }

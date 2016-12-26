@@ -50,6 +50,12 @@ public class GetInfoGuard : MonoBehaviour
         guards.Clear();
         villagers.Clear();
         villagers.Clear();
+        if (agressors.Count != 0 && GetComponent<GuardMoveTo>().Target == null)
+        {
+            GetComponent<GuardMoveTo>().Target = agressors[0];
+            GetComponent<Defend>().Target = agressors[0];
+        }
+
         foreach (GameObject barbarian in GameObject.FindGameObjectsWithTag("Barbarian"))
         {
             if (CanSeeTarget(barbarian))
@@ -64,7 +70,7 @@ public class GetInfoGuard : MonoBehaviour
         foreach (GameObject villager in GameObject.FindGameObjectsWithTag("Villager"))
         { villagers.Add(villager); }
 
-        if (target != null)
+        if (target != null && !GetComponent<Defend>().helping)
         {
             GetComponent<GuardMoveTo>().Target = target;
             GetComponent<Defend>().Target = target;
@@ -75,7 +81,8 @@ public class GetInfoGuard : MonoBehaviour
         {
             foreach (GameObject agressor in agressors)
             {
-                agressor.GetComponent<GetInfoBarbarian>().target = null;
+                if (agressor != null)
+                  agressor.GetComponent<GetInfoBarbarian>().target = null;
             }
             Destroy(gameObject);
         }

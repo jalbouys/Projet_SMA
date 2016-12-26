@@ -66,7 +66,8 @@ public class GetInfoVillager : MonoBehaviour
         {
             foreach (GameObject agressor in agressors)
             {
-                agressor.GetComponent<GetInfoBarbarian>().target = null;
+                if (agressor != null)
+                    agressor.GetComponent<GetInfoBarbarian>().target = null;
             }
             Destroy(gameObject);
         }

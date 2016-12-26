@@ -25,6 +25,19 @@ public class MoveTo : MonoBehaviour {
         }
     }
 
+    public string DebugMsg
+    {
+        get
+        {
+            return debugMsg;
+        }
+
+        set
+        {
+            debugMsg = value;
+        }
+    }
+
     // Use this for initialization
     void Start () {
 

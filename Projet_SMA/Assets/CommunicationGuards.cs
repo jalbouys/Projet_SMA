@@ -12,19 +12,28 @@ public class CommunicationGuards : MonoBehaviour {
 
     void MessageReceived(string message)
     {
-        Debug.Log("MessageReceived\n");
-        if (message == "jump")
+        //Debug.Log("MessageReceived: ");
+        //Debug.Log(message + "\n");
+        if (message == "help guard")
         {
-            transform.position.Set(transform.position.x, transform.position.y, 50.0F);
-            Debug.Log("Jump\n");
-        }
-        else if (message == "move")
-        {
-            //transform.position = Vector3.MoveTowards(transform.position, personnage.transform.position, Time.deltaTime * 5);
-        }
-        else if (message == "help")
-        {
-            //Si un villageois ou un gard appelle à l'aide et que l'on est pas attaqué on ira peut être l'aider
+            // We received an help message, we try to find who sent it
+            foreach (GameObject guard in otherGuards)
+            {
+                if (guard == null)
+                    continue;
+                var distance = Vector3.Distance(guard.transform.position, transform.position);
+                if (distance < 10 && guard.transform.position != transform.position)//looking for a guard near us
+                {
+                    GameObject otherGuardTarget = guard.GetComponent<Defend>().Target;
+                    if (guard.GetComponent<CommunicationGuards>().hp < 50 &&  otherGuardTarget != null)
+                    {
+                        GetComponent<Defend>().Target = otherGuardTarget; //We found our friend who needs help, we change our target for his...
+                        GetComponent<GuardMoveTo>().Target = otherGuardTarget;
+                        GetComponent<Defend>().helping = true;
+                        GetComponent<GuardMoveTo>().DebugMsg = "Coming to help!";
+                    }
+                }
+            }
         }
     }
     // Use this for initialization
@@ -45,13 +54,16 @@ public class CommunicationGuards : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+        hp = GetComponent<GetInfoGuard>().hp;
         foreach (GameObject guard in otherGuards)
         {
+            if (guard == null)
+                continue;
             var distance = Vector3.Distance(guard.transform.position, transform.position);
-            if (distance < 10 && guard.transform.position != transform.position)//if other barbarian is less than 10m away...
+            if (distance < 10 && guard.transform.position != transform.position)//if other guard is less than 10m away...
             {
-                if (hp < 50 && attacked == true)
-                    guard.GetComponent<CommunicationGuards>().MessageReceived("help");
+                if (hp < 50 && GetComponent<Defend>().Target != null)
+                    guard.GetComponent<CommunicationGuards>().MessageReceived("help guard");
             }
         }
     }

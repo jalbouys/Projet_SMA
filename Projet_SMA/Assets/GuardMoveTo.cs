@@ -10,7 +10,20 @@ public class GuardMoveTo : MonoBehaviour {
     private string debugMsg = "";
     private GameObject target;
     public bool patrolling = true;
+    private bool defending = false;
 
+    public string DebugMsg
+    {
+        get
+        {
+            return debugMsg;
+        }
+
+        set
+        {
+            debugMsg = value;
+        }
+    }
     public GameObject Target
     {
         get
@@ -65,7 +78,7 @@ public class GuardMoveTo : MonoBehaviour {
         if(Target != null)
         {
             var distance = Vector3.Distance(Target.transform.position, transform.position);
-            if (distance > 4) //target too far to defend, keep position
+            if (distance > 10) //target too far to defend, keep position
             {
                 debugMsg = "Alert intruders coming!";
                 patrolling = false;
@@ -74,8 +87,12 @@ public class GuardMoveTo : MonoBehaviour {
             }
             else
             {
-                debugMsg = "defending the village!";
-                patrolling = false;
+                if (defending == false) //already defending
+                {
+                    debugMsg = "defending the village!";
+                    patrolling = false;
+                    defending = true;
+                }
                 MoveToTarget(Target);
             }
         }
@@ -84,6 +101,8 @@ public class GuardMoveTo : MonoBehaviour {
             debugMsg = "patrolling...";
             GetComponent<Animator>().Play("Walk");
             patrolling = true;
+            defending = false;
+            GetComponent<Defend>().helping = false;
         }
     }
 
@@ -98,10 +117,10 @@ public class GuardMoveTo : MonoBehaviour {
     void OnGUI()
     {
         Vector3 characterPos = Camera.main.WorldToScreenPoint(transform.position);
-        characterPos = new Vector3(Mathf.Clamp(characterPos.x, 0 + (100 / 2), Screen.width - (100 / 2)),
+        characterPos = new Vector3(Mathf.Clamp(characterPos.x, 15 + (100 / 2), Screen.width - (100 / 2)),
                                            Mathf.Clamp(characterPos.y, 50, Screen.height),
                                            characterPos.z);
-        GUILayout.BeginArea(new Rect((characterPos.x + 0) - (100 / 2), (Screen.height - characterPos.y) + 0, 100, 100));
+        GUILayout.BeginArea(new Rect((characterPos.x + 15) - (100 / 2), (Screen.height - characterPos.y) - 15 , 100, 100));
 
         GUI.Label(new Rect(0, 0, 100, 100), debugMsg);
         GUILayout.EndArea();

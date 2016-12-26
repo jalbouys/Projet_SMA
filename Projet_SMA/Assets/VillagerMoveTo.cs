@@ -27,6 +27,20 @@ public class VillagerMoveTo : MonoBehaviour
         }
     }
 
+
+    public string DebugMsg
+    {
+        get
+        {
+            return debugMsg;
+        }
+
+        set
+        {
+            debugMsg = value;
+        }
+    }
+
     // Use this for initialization
     void Start()
     {
@@ -39,10 +53,13 @@ public class VillagerMoveTo : MonoBehaviour
     void Update()
     {
 
+        Animator charAnim = GetComponent<Animator>();
         Vector3 fwd = transform.TransformDirection(Vector3.forward);
         if (attacker != null && Vector3.Distance(attacker.transform.position, transform.position)<10)
         {
             debugMsg = "Running away from ennemy!";
+            charAnim.Play("Walk");
+            charAnim.speed = 1;
             Vector3 direction = ((attacker.transform.position) - (transform.position)).normalized;
             transform.rotation = Quaternion.LookRotation(transform.position - attacker.transform.position);
             transform.position += -direction * 1 * Time.deltaTime;
@@ -50,7 +67,6 @@ public class VillagerMoveTo : MonoBehaviour
         else//no enemy in sight => wander around
         {
             debugMsg = "Wandering around...";
-            Animator charAnim = GetComponent<Animator>();
             charAnim.Play("Walk");
             charAnim.speed = 1;
             timer += Time.deltaTime;
