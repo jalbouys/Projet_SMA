@@ -50,7 +50,11 @@ public class MoveTo : MonoBehaviour {
         Vector3 fwd = transform.TransformDirection(Vector3.forward);
         if (Target != null) 
         {
-            debugMsg = "Target locked: " + target.tag;
+            Attack barbAttack = GetComponent<Attack>();
+            if (!barbAttack.helping && !barbAttack.attacking)
+            {
+                    debugMsg = "Target locked: " + target.tag;
+            }
             MoveToTarget(Target);
         }
         else// no enemy in sight => wander around

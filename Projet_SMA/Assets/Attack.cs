@@ -8,6 +8,8 @@ public class Attack : MonoBehaviour {
     BarbarianMoveTo moveToBar;
     MoveTo move;
     private GameObject target = null;
+    public bool helping = false;
+    public bool attacking = false;
     public GameObject Target
     {
         get
@@ -36,17 +38,25 @@ public class Attack : MonoBehaviour {
         if (target != null)
         {
             var distance = Vector3.Distance(target.transform.position, transform.position);
+            if (helping)
+                GetComponent<MoveTo>().DebugMsg = "Coming to help!";
             //Debug.Log(distance);
             if (distance < 2)//if close enough, attack
             {
+                attacking = true;
+                GetComponent<MoveTo>().DebugMsg = "Attacking: " + target.tag;
                 if (Time.time > nextAttackTime)
                     attack(target);//whoop-ass
             }
+            else
+                attacking = false;
         }
-        else if(target == null)
+        else if(target == null || attacking == false)
         {
             GetComponent<Animation>().Stop("Lumbering");//stop attacking
             GetComponent<Animation>().Play("Walk");//stop attacking
+            attacking = false;
+            helping = false;
         }
     }
 

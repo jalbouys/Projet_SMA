@@ -29,7 +29,7 @@ public class GetInfoBarbarian : MonoBehaviour
             if (CanSeeTarget(guard))
             {
                 guards.Add(guard);
-                if (target == null)
+                if (target == null && guard.GetComponent<GetInfoGuard>().agressors.Count < 2) // Only choose as target if less than 2 attacking him
                     target = guard;
             }
         }
@@ -38,7 +38,7 @@ public class GetInfoBarbarian : MonoBehaviour
             if (CanSeeTarget(villager))
             {
                 villagers.Add(villager);
-                if (target == null)
+                if (target == null && villager.GetComponent<GetInfoVillager>().agressors.Count < 2)
                     target = villager;
             }
         }
@@ -49,8 +49,8 @@ public class GetInfoBarbarian : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        GetComponent<Communication>().hp = hp;
-        GetComponent<Communication>().target = target;
+        GetComponent<BarbarianCommunication>().hp = hp;
+        GetComponent<BarbarianCommunication>().target = target;
         barbarians.Clear();
         guards.Clear();
         villagers.Clear();
@@ -61,7 +61,7 @@ public class GetInfoBarbarian : MonoBehaviour
             if (CanSeeTarget(guard))
             {
                 guards.Add(guard);
-                if (target == null)
+                if (target == null && guard.GetComponent<GetInfoGuard>().agressors.Count < 2)
                     target = guard;
             }
 
@@ -71,7 +71,7 @@ public class GetInfoBarbarian : MonoBehaviour
             if (CanSeeTarget(villager))
             {
                 villagers.Add(villager);
-                if (target == null)
+                if (target == null && villager.GetComponent<GetInfoVillager>().agressors.Count < 2)
                     target = villager;
             }
         }
@@ -79,13 +79,13 @@ public class GetInfoBarbarian : MonoBehaviour
         { 
             GetComponent<MoveTo>().Target = null;
             GetComponent<Attack>().Target = null;
-            GetComponent<Communication>().target = null;
+            GetComponent<BarbarianCommunication>().target = null;
         }
         else
         {
             GetComponent<MoveTo>().Target = target;
             GetComponent<Attack>().Target = target;
-            GetComponent<Communication>().target = target;
+            GetComponent<BarbarianCommunication>().target = target;
         }
 
 
