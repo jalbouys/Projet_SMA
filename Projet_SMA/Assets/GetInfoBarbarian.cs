@@ -14,6 +14,7 @@ public class GetInfoBarbarian : MonoBehaviour
     public List<GameObject> villagers = new List<GameObject>();
     public List<GameObject> agressors = new List<GameObject>();
     public int hp = 100;
+    public bool hitVillagersOverGuards = false;
     public GameObject target = null;//or target pos?
     public GameObject attacker;
     public int fieldOfViewRange = 60;
@@ -22,6 +23,7 @@ public class GetInfoBarbarian : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        hitVillagersOverGuards = false;
         foreach (GameObject barbarian in GameObject.FindGameObjectsWithTag("Barbarian"))
         { barbarians.Add(barbarian); }
         foreach (GameObject guard in GameObject.FindGameObjectsWithTag("Guard"))
@@ -38,8 +40,10 @@ public class GetInfoBarbarian : MonoBehaviour
             if (CanSeeTarget(villager))
             {
                 villagers.Add(villager);
-                if (target == null && villager.GetComponent<GetInfoVillager>().agressors.Count < 2)
-                    target = villager;
+                if ((target == null) || (hitVillagersOverGuards && target.tag == "Guard")) {
+                    if (villager.GetComponent<GetInfoVillager>().agressors.Count < 2)
+                        target = villager;
+                }
             }
         }
         GetComponent<MoveTo>().Target = target;
@@ -54,6 +58,7 @@ public class GetInfoBarbarian : MonoBehaviour
         barbarians.Clear();
         guards.Clear();
         villagers.Clear();
+        agressors.RemoveAll(item => item == null);
         foreach (GameObject barbarian in GameObject.FindGameObjectsWithTag("Barbarian"))
         { barbarians.Add(barbarian); }
         foreach (GameObject guard in GameObject.FindGameObjectsWithTag("Guard"))
@@ -71,8 +76,11 @@ public class GetInfoBarbarian : MonoBehaviour
             if (CanSeeTarget(villager))
             {
                 villagers.Add(villager);
-                if (target == null && villager.GetComponent<GetInfoVillager>().agressors.Count < 2)
-                    target = villager;
+                if ((target == null) || (hitVillagersOverGuards && target.tag == "Guard"))
+                {
+                    if (villager.GetComponent<GetInfoVillager>().agressors.Count < 2)
+                        target = villager;
+                }
             }
         }
         if ((villagers.Count == 0) && (guards.Count == 0))//Did not see anybody

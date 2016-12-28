@@ -17,7 +17,7 @@ public class BarbarianCommunication : MonoBehaviour {
         if (barbarian == null)
             continue;
         var distance = Vector3.Distance(barbarian.transform.position, transform.position);
-        if (distance < 10 && barbarian.transform.position != transform.position)//looking for a guard near us
+        if (distance < 10 && barbarian.transform.position != transform.position)//looking for a barbarian near us
         {
             if (message == "help")
             {
@@ -37,8 +37,9 @@ public class BarbarianCommunication : MonoBehaviour {
                     Attack myAttack = GetComponent<Attack>();
                     if (myAttack.Target == null && barbarianTarget != null) // Case of ally attacking + and no target
                     {
-                        myAttack.Target = barbarianTarget;
-                        //Debug.Log("New target acquired");
+                        if ((barbarianTarget.tag == "Guard" && barbarianTarget.GetComponent<GetInfoGuard>().agressors.Count < 2) ||
+                            (barbarianTarget.tag == "Villager" && barbarianTarget.GetComponent<GetInfoVillager>().agressors.Count < 2))
+                            myAttack.Target = barbarianTarget;
                     }
 
                 }    
@@ -58,21 +59,18 @@ public class BarbarianCommunication : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-
+        otherBarbarians.RemoveAll(item => item == null);
         hp = GetComponent<GetInfoBarbarian>().hp;
         foreach (GameObject barbarian in otherBarbarians)
         {
-            if (barbarian == null)
-                continue;
             var distance = Vector3.Distance(barbarian.transform.position, transform.position);
             if (distance < 10 && barbarian.transform.position != transform.position)//if other barbarian is less than 10m away...
             {
-                if (hp < 50 && GetComponent<GetInfoBarbarian>().agressors.Count != 0)
+                if (hp < 50 && GetComponent<GetInfoBarbarian>().agressors.Count != 0 && GetComponent<Attack>().attackingAlone)
                     barbarian.GetComponent<BarbarianCommunication>().MessageReceived("help");
                 else if (GetComponent<MoveTo>().Target != null)
-                {
                     barbarian.GetComponent<BarbarianCommunication>().MessageReceived("attacking");
-                }
+                
             }
         }
     }

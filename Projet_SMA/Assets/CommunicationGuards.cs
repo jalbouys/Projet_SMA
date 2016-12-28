@@ -55,10 +55,10 @@ public class CommunicationGuards : MonoBehaviour {
     void Update()
     {
         hp = GetComponent<GetInfoGuard>().hp;
+        otherGuards.RemoveAll(item => item == null);
+        otherVillagers.RemoveAll(item => item == null);
         foreach (GameObject guard in otherGuards)
         {
-            if (guard == null)
-                continue;
             var distance = Vector3.Distance(guard.transform.position, transform.position);
             if (distance < 10 && guard.transform.position != transform.position)//if other guard is less than 10m away...
             {

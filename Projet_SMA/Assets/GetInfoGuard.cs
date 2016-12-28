@@ -50,6 +50,7 @@ public class GetInfoGuard : MonoBehaviour
         guards.Clear();
         villagers.Clear();
         villagers.Clear();
+        agressors.RemoveAll(item => item == null);
         if (agressors.Count != 0 && GetComponent<GuardMoveTo>().Target == null) // Defend himself when attacked
         {
             GetComponent<GuardMoveTo>().Target = agressors[0];

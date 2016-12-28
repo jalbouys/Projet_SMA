@@ -78,7 +78,15 @@ public class GuardMoveTo : MonoBehaviour {
         if(Target != null)
         {
             var distance = Vector3.Distance(Target.transform.position, transform.position);
-            if (distance > 10) //target too far to defend, keep position
+            if (distance > 30) //target too far, keep patrolling
+            {
+                debugMsg = "patrolling...";
+                GetComponent<Animator>().Play("Walk");
+                patrolling = true;
+                defending = false;
+                GetComponent<Defend>().helping = false;
+            }
+            else if (distance > 10) //target too far to defend, keep position
             {
                 debugMsg = "Alert intruders coming!";
                 patrolling = false;

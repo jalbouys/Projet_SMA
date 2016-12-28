@@ -46,6 +46,7 @@ public class GetInfoVillager : MonoBehaviour
         barbarians.Clear();
         guards.Clear();
         villagers.Clear();
+        agressors.RemoveAll(item => item == null);
         foreach (GameObject barbarian in GameObject.FindGameObjectsWithTag("Barbarian"))
         {
             barbarians.Add(barbarian);

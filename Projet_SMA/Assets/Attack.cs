@@ -5,6 +5,7 @@ public class Attack : MonoBehaviour {
 
     public float nextAttackTime;
     public float attackTime = 1;//time it takes to do 1 attack
+    public bool attackingAlone = true;
     BarbarianMoveTo moveToBar;
     MoveTo move;
     private GameObject target = null;
@@ -71,6 +72,7 @@ public class Attack : MonoBehaviour {
         {
             targetInfoV = target.GetComponent<GetInfoVillager>();
             targetInfoV.agressors.Add(gameObject);
+            attackingAlone = (targetInfoV.agressors.Count == 1);
             targetInfoV.hp -= 10;//remove 10HP from victim
             targetInfoV.attacker = transform.gameObject;
             //Debug.Log("Whack! ");
@@ -81,6 +83,7 @@ public class Attack : MonoBehaviour {
         {
             targetInfoG = target.GetComponent<GetInfoGuard>();
             targetInfoG.agressors.Add(gameObject);
+            attackingAlone = (targetInfoG.agressors.Count == 1);
             targetInfoG.hp -= 10;//remove 10HP from victim
             targetInfoG.attacker = transform.gameObject;
             //Debug.Log("Whack! ");
