@@ -14,8 +14,8 @@ public class BarbarianCommunication : MonoBehaviour {
             // We received an help message, we try to find who sent it
        foreach (GameObject barbarian in otherBarbarians)
        {
-        if (barbarian == null)
-            continue;
+            if (barbarian == null)
+                continue;
         var distance = Vector3.Distance(barbarian.transform.position, transform.position);
         if (distance < 10 && barbarian.transform.position != transform.position)//looking for a barbarian near us
         {

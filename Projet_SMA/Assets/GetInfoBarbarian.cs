@@ -15,15 +15,19 @@ public class GetInfoBarbarian : MonoBehaviour
     public List<GameObject> agressors = new List<GameObject>();
     public int hp = 100;
     public bool hitVillagersOverGuards = false;
+    public bool findChestMode = true;
     public GameObject target = null;//or target pos?
     public GameObject attacker;
-    public int fieldOfViewRange = 60;
+    public int fieldOfViewRange = 90;
     
 
     // Use this for initialization
     void Start()
     {
         hitVillagersOverGuards = false;
+        findChestMode = true;
+        fieldOfViewRange = 90;
+        GameObject chest = GameObject.FindGameObjectWithTag("Chest");
         foreach (GameObject barbarian in GameObject.FindGameObjectsWithTag("Barbarian"))
         { barbarians.Add(barbarian); }
         foreach (GameObject guard in GameObject.FindGameObjectsWithTag("Guard"))
@@ -40,12 +44,15 @@ public class GetInfoBarbarian : MonoBehaviour
             if (CanSeeTarget(villager))
             {
                 villagers.Add(villager);
-                if ((target == null) || (hitVillagersOverGuards && target.tag == "Guard")) {
+                if ((target == null) || (hitVillagersOverGuards && target.tag == "Guard"))
+                {
                     if (villager.GetComponent<GetInfoVillager>().agressors.Count < 2)
                         target = villager;
                 }
             }
         }
+        if (CanSeeTarget(chest) && findChestMode)
+            target = chest;
         GetComponent<MoveTo>().Target = target;
         GetComponent<Attack>().Target = target;
     }
@@ -55,6 +62,7 @@ public class GetInfoBarbarian : MonoBehaviour
     {
         GetComponent<BarbarianCommunication>().hp = hp;
         GetComponent<BarbarianCommunication>().target = target;
+        GameObject chest = GameObject.FindGameObjectWithTag("Chest");
         barbarians.Clear();
         guards.Clear();
         villagers.Clear();
@@ -83,7 +91,9 @@ public class GetInfoBarbarian : MonoBehaviour
                 }
             }
         }
-        if ((villagers.Count == 0) && (guards.Count == 0))//Did not see anybody
+        if (CanSeeTarget(chest) && findChestMode)
+            target = chest;
+        if ((villagers.Count == 0) && (guards.Count == 0) && (target == null))//Did not see anybody
         { 
             GetComponent<MoveTo>().Target = null;
             GetComponent<Attack>().Target = null;

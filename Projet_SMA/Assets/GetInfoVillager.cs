@@ -23,10 +23,9 @@ public class GetInfoVillager : MonoBehaviour
     {
         foreach (GameObject barbarian in GameObject.FindGameObjectsWithTag("Barbarian"))
         {
-            barbarians.Add(barbarian);
             if (CanSeeTarget(barbarian))
             {
-                guards.Add(barbarian);
+                barbarians.Add(barbarian);
                 if (attacker == null || IsClosest(barbarian,attacker))
                     attacker = barbarian;
             }
@@ -49,10 +48,9 @@ public class GetInfoVillager : MonoBehaviour
         agressors.RemoveAll(item => item == null);
         foreach (GameObject barbarian in GameObject.FindGameObjectsWithTag("Barbarian"))
         {
-            barbarians.Add(barbarian);
             if (CanSeeTarget(barbarian))
             {
-                guards.Add(barbarian);
+                barbarians.Add(barbarian);
                 if (attacker == null || IsClosest(barbarian, attacker))
                     attacker = barbarian;
             }
