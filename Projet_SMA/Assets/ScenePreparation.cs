@@ -33,7 +33,7 @@ public class ScenePreparation : MonoBehaviour {
 
         for (int i = 0; i < PlayerPrefs.GetInt("Villagers"); i++)
         {
-            Vector3 position = new Vector3(Random.Range(-76.0f, 23.7f), 0.0f, Random.Range(-70.0f, 15.0f));
+            Vector3 position = new Vector3(Random.Range(-22f, -18.0f), 0.0f, Random.Range(-30.0f, -24.0f));
             GameObject tmp = (GameObject)Instantiate(villager, position, villager.transform.rotation);
             tmp.name = "Villager " + i;
             villagers.Add(tmp);
