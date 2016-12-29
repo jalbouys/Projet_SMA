@@ -8,8 +8,6 @@ public class Defend : MonoBehaviour
     public float nextAttackTime;
     public float attackTime = 1;//time it takes to do 1 attack
     public bool helping = false;
-    BarbarianMoveTo moveToBar;
-    MoveTo move;
     private GameObject target = null;
     public GameObject Target
     {

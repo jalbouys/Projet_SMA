@@ -7,7 +7,6 @@ public class Attack : MonoBehaviour {
     public float attackTime = 1;//time it takes to do 1 attack
     public bool attackingAlone = true;
     BarbarianMoveTo moveToBar;
-    MoveTo move;
     private GameObject target = null;
     public bool helping = false;
     public bool attacking = false;
@@ -29,7 +28,6 @@ public class Attack : MonoBehaviour {
         nextAttackTime = Time.time;
         moveToBar = GetComponent<BarbarianMoveTo>();
         moveToBar.moveToVillage();
-        move = GetComponent<MoveTo>();
 
     }
 	
@@ -40,12 +38,12 @@ public class Attack : MonoBehaviour {
         {
             var distance = Vector3.Distance(target.transform.position, transform.position);
             if (helping)
-                GetComponent<MoveTo>().DebugMsg = "Coming to help!";
+                moveToBar.DebugMsg = "Coming to help!";
             //Debug.Log(distance);
             if (distance < 2)//if close enough, attack
             {
                 attacking = true;
-                GetComponent<MoveTo>().DebugMsg = "Attacking: " + target.tag;
+                moveToBar.DebugMsg = "Attacking: " + target.tag;
                 if (Time.time > nextAttackTime)
                     attack(target);//whoop-ass
             }

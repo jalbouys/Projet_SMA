@@ -108,5 +108,4 @@ public class GetInfoVillager : MonoBehaviour
         return (Vector3.Distance(current.transform.position, transform.position) < Vector3.Distance(prev.transform.position, transform.position));
     }
 
-
 }

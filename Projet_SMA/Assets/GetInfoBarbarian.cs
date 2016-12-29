@@ -18,7 +18,7 @@ public class GetInfoBarbarian : MonoBehaviour
     public bool findChestMode = true;
     public GameObject target = null;//or target pos?
     public GameObject attacker;
-    public int fieldOfViewRange = 90;
+    public int fieldOfViewRange = 60;
     
 
     // Use this for initialization
@@ -26,7 +26,6 @@ public class GetInfoBarbarian : MonoBehaviour
     {
         hitVillagersOverGuards = false;
         findChestMode = true;
-        fieldOfViewRange = 90;
         GameObject chest = GameObject.FindGameObjectWithTag("Chest");
         foreach (GameObject barbarian in GameObject.FindGameObjectsWithTag("Barbarian"))
         { barbarians.Add(barbarian); }
@@ -53,7 +52,7 @@ public class GetInfoBarbarian : MonoBehaviour
         }
         if (CanSeeTarget(chest) && findChestMode)
             target = chest;
-        GetComponent<MoveTo>().Target = target;
+        GetComponent<BarbarianMoveTo>().Target = target;
         GetComponent<Attack>().Target = target;
     }
 
@@ -93,15 +92,15 @@ public class GetInfoBarbarian : MonoBehaviour
         }
         if (CanSeeTarget(chest) && findChestMode)
             target = chest;
-        if ((villagers.Count == 0) && (guards.Count == 0) && (target == null))//Did not see anybody
+        if ((villagers.Count == 0) && (guards.Count == 0))//Did not see anybody
         { 
-            GetComponent<MoveTo>().Target = null;
+            GetComponent<BarbarianMoveTo>().Target = null;
             GetComponent<Attack>().Target = null;
             GetComponent<BarbarianCommunication>().target = null;
         }
         else
         {
-            GetComponent<MoveTo>().Target = target;
+            GetComponent<BarbarianMoveTo>().Target = target;
             GetComponent<Attack>().Target = target;
             GetComponent<BarbarianCommunication>().target = target;
         }

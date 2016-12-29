@@ -26,14 +26,14 @@ public class BarbarianCommunication : MonoBehaviour {
                 if (barbarian.GetComponent<BarbarianCommunication>().hp < 50 && barbarianTarget != null)
                 {
                     GetComponent<Attack>().Target = barbarianTarget; //We found our friend who needs help, we change our target for his...
-                    GetComponent<MoveTo>().Target = barbarianTarget;
+                    GetComponent<BarbarianMoveTo>().Target = barbarianTarget;
                     GetComponent<Attack>().helping = true;
-                    GetComponent<MoveTo>().DebugMsg = "Coming to help!";
+                    GetComponent<BarbarianMoveTo>().DebugMsg = "Coming to help!";
                 }
             }
             else if (message == "attacking")
                 {
-                    GameObject barbarianTarget = barbarian.GetComponent<MoveTo>().Target;
+                    GameObject barbarianTarget = barbarian.GetComponent<BarbarianMoveTo>().Target;
                     Attack myAttack = GetComponent<Attack>();
                     if (myAttack.Target == null && barbarianTarget != null) // Case of ally attacking + and no target
                     {
@@ -68,7 +68,7 @@ public class BarbarianCommunication : MonoBehaviour {
             {
                 if (hp < 50 && GetComponent<GetInfoBarbarian>().agressors.Count != 0 && GetComponent<Attack>().attackingAlone)
                     barbarian.GetComponent<BarbarianCommunication>().MessageReceived("help");
-                else if (GetComponent<MoveTo>().Target != null)
+                else if (GetComponent<BarbarianMoveTo>().Target != null)
                     barbarian.GetComponent<BarbarianCommunication>().MessageReceived("attacking");
                 
             }
