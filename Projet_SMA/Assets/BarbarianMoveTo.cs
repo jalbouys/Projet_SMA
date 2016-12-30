@@ -13,7 +13,7 @@ public class BarbarianMoveTo : MonoBehaviour {
     private string debugMsg = "";
     private Vector3 previousTargetPosition;
     private Vector3 villageEntrance = new Vector3(-18, 0, 20);
-    private RaycastHit villageHit = new RaycastHit();
+    private bool movingToVillage = false;
 
     public GameObject Target
     {
@@ -45,21 +45,25 @@ public class BarbarianMoveTo : MonoBehaviour {
     void Start () {
 
         agent = GetComponent<NavMeshAgent>();
-        villageHit.point = villageEntrance;
         timer = wanderTimer;
     }
 	
 	// Update is called once per frame
 	void Update () {
         Vector3 fwd = transform.TransformDirection(Vector3.forward);
-        if (Target != null) 
+        if (Target != null)
         {
             Attack barbAttack = GetComponent<Attack>();
             if (!barbAttack.helping && !barbAttack.attacking)
             {
-                    debugMsg = "Target locked: " + target.tag;
+                debugMsg = "Target locked: " + target.tag;
             }
             MoveToTarget(Target);
+            movingToVillage = false;
+        }
+        else if (movingToVillage)
+        {
+            debugMsg = "Moving towards village";
         }
         else// no enemy in sight => wander around
         {
@@ -77,8 +81,9 @@ public class BarbarianMoveTo : MonoBehaviour {
 
     public void moveToVillage()
     {
-        GetComponent<NavMeshAgent>().destination = villageHit.point;
-        transform.LookAt(villageHit.point);
+        GetComponent<NavMeshAgent>().SetDestination(villageEntrance);
+        transform.LookAt(villageEntrance);
+        movingToVillage = true;
     }
 
     void MoveToTarget(GameObject target)

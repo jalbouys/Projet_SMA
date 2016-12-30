@@ -23,7 +23,7 @@ public class ScenePreparation : MonoBehaviour {
 
         for(int i = 0; i < PlayerPrefs.GetInt("Barbarians");i++)
         {
-            Vector3 position = new Vector3(Random.Range(-50.0f,-20.0f),0.0f,Random.Range(50.0f,70.0f));
+            Vector3 position = new Vector3(Random.Range(-70.0f,-50.0f),0.0f,Random.Range(50.0f,70.0f));
             GameObject tmp = (GameObject)Instantiate(barbarian, position, barbarian.transform.rotation);
             tmp.name = "Barbarian " + i;
             barbarians.Add(tmp);

@@ -19,6 +19,9 @@ public class CommunicationGuards : MonoBehaviour {
             // We received an help message, we try to find who sent it
             foreach (GameObject guard in otherGuards)
             {
+                if (guard == null)
+                    continue;
+
                 var distance = Vector3.Distance(guard.transform.position, transform.position);
                 if (distance < 10 && guard.transform.position != transform.position)//looking for a guard near us
                 {

@@ -94,7 +94,10 @@ public class GetInfoVillager : MonoBehaviour
                 if (hit.transform.tag == target.tag)
                 {
                     //Debug.Log("Saw: " + target.tag);
-                    return true;
+                    if (Vector3.Distance(transform.position, target.transform.position) < 20)
+                        return true;
+                    else
+                        return false;
                 }
                 else
                 {

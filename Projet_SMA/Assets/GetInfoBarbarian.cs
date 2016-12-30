@@ -131,9 +131,12 @@ public class GetInfoBarbarian : MonoBehaviour
                     //Debug.Log("Tag : " + hit.transform.tag);
                     if (hit.transform.tag == target.tag)
                     {
-                        //Debug.Log("Saw: " + target.tag);
+                    //Debug.Log("Saw: " + target.tag);
+                    if (Vector3.Distance(transform.position, target.transform.position) < 20)
                         return true;
-                    }
+                    else
+                        return false;
+                }
                     else
                     {
                         //Debug.Log("Saw Nothing");
