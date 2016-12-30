@@ -60,6 +60,10 @@ public class GetInfoVillager : MonoBehaviour
         foreach (GameObject villager in GameObject.FindGameObjectsWithTag("Villager"))
         { villagers.Add(villager); }
 
+        if(barbarians.Count > 3)
+        {
+            GetComponent<VillagerMoveTo>().villageInvaded = true;
+        }
         //Debug.Log(hp);
         if(hp <= 0)
         {

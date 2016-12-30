@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class VillagerMoveTo : MonoBehaviour
 {
@@ -8,11 +9,13 @@ public class VillagerMoveTo : MonoBehaviour
     //wandering variable
     public float wanderRadius = 100;
     public float wanderTimer = 5;
-
+    public bool villageInvaded = false;
+    private List<GameObject> houses = new List<GameObject>();
     private GameObject attacker = null;
     private NavMeshAgent agent;
     private float timer;
     private string debugMsg = "";
+    private bool movingToSafePlace = false;
 
     public GameObject Attacker
     {
@@ -47,6 +50,10 @@ public class VillagerMoveTo : MonoBehaviour
         //wandering stuff
         agent = GetComponent<NavMeshAgent>();
         timer = wanderTimer;
+        foreach (GameObject house in GameObject.FindGameObjectsWithTag("House"))
+        {
+            houses.Add(house);
+        }
     }
 
     // Update is called once per frame
@@ -55,18 +62,42 @@ public class VillagerMoveTo : MonoBehaviour
 
         Animator charAnim = GetComponent<Animator>();
         Vector3 fwd = transform.TransformDirection(Vector3.forward);
-        if (attacker != null && Vector3.Distance(attacker.transform.position, transform.position)<10)
+        if (villageInvaded)
+        {
+            debugMsg = "Running Home, Village invaded!";
+            charAnim.Play("Walk");
+            charAnim.speed = 1;
+            if (!movingToSafePlace)
+            {
+                agent.SetDestination(FindClosestHouse(transform.position));
+                movingToSafePlace = true;
+            }
+            else if (Vector3.Distance(transform.position, FindClosestHouse(transform.position)) < 5)
+            {
+                villageInvaded = false;
+                movingToSafePlace = false;
+            }
+
+        }
+        else if (attacker != null && Vector3.Distance(attacker.transform.position, transform.position)<10)
         {
             debugMsg = "Running away from ennemy!";
             charAnim.Play("Walk");
             charAnim.speed = 1;
-            Vector3 direction = ((attacker.transform.position) - (transform.position)).normalized;
-            transform.rotation = Quaternion.LookRotation(transform.position - attacker.transform.position);
-            transform.position += -direction * 1 * Time.deltaTime;
+            if (!movingToSafePlace)
+            {
+                agent.SetDestination(FindClosestHouse(transform.position));
+                movingToSafePlace = true;
+            }
+            else if (Vector3.Distance(transform.position, FindClosestHouse(transform.position)) < 5)
+            {
+                villageInvaded = false;
+                movingToSafePlace = false;
+            }
         }
         else//no enemy in sight => wander around
         {
-            debugMsg = "Wandering around...";
+            debugMsg = "Wandering peacefully around...";
             charAnim.Play("Walk");
             charAnim.speed = 1;
             timer += Time.deltaTime;
@@ -78,6 +109,20 @@ public class VillagerMoveTo : MonoBehaviour
                 timer = 0;
             }
         }
+    }
+
+    private Vector3 FindClosestHouse(Vector3 position) {
+        float dist = 10000;
+        Vector3 dest = position;
+        foreach(GameObject house in houses)
+        {
+            if (Vector3.Distance(position, house.transform.position) < dist)
+            {
+                dist = Vector3.Distance(position, house.transform.position);
+                dest = house.transform.position;
+            }
+        }
+        return dest;
     }
 
 
