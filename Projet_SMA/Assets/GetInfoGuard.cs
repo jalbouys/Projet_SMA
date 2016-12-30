@@ -2,10 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
-/// <summary>
-/// gets list of all other agents on the field
-/// </summary>
-
+/*This script contains all the information for guard agents :
+    list of known/seen barbarians,guards,villagers,agressors
+    hp, target, attacker,...
+     */
 public class GetInfoGuard : MonoBehaviour
 {
 
@@ -18,15 +18,16 @@ public class GetInfoGuard : MonoBehaviour
     public GameObject attacker;
     public int fieldOfViewRange = 60;
 
-    // Use this for initialization
+    /*Initialize the lists of barbarians, guards and villagers
+        set a target if any barbarian on sight...*/
     void Start()
     {
         foreach (GameObject barbarian in GameObject.FindGameObjectsWithTag("Barbarian"))
         {
-            if (CanSeeTarget(barbarian))
+            if (CanSeeTarget(barbarian)) //If barbarian on sight
             {
-                barbarians.Add(barbarian);
-                if (target == null || IsClosest(barbarian, target))
+                barbarians.Add(barbarian); //add him to the list
+                if (target == null || IsCloser(barbarian, target)) //In case closer than previous target, change to new target
                     target = barbarian;
             }
         }
@@ -59,10 +60,10 @@ public class GetInfoGuard : MonoBehaviour
 
         foreach (GameObject barbarian in GameObject.FindGameObjectsWithTag("Barbarian"))
         {
-            if (CanSeeTarget(barbarian))
+            if (CanSeeTarget(barbarian)) //If barbarian on sight
             {
-                barbarians.Add(barbarian);
-                if (target == null || IsClosest(barbarian, target) )
+                barbarians.Add(barbarian); //add him to the list
+                if (target == null || IsCloser(barbarian, target)) //In case closer than previous target, change to new target
                     target = barbarian;
             }
         }
@@ -71,13 +72,13 @@ public class GetInfoGuard : MonoBehaviour
         foreach (GameObject villager in GameObject.FindGameObjectsWithTag("Villager"))
         { villagers.Add(villager); }
 
-        if (target != null && !GetComponent<Defend>().helping)
+        if (target != null && !GetComponent<Defend>().helping) //Don't update the target while helping someone else
         {
             GetComponent<GuardMoveTo>().Target = target;
             GetComponent<Defend>().Target = target;
         }
-
-        //Debug.Log(hp);
+        
+        //Deal with death of agent
         if (hp <= 0)
         {
             foreach (GameObject agressor in agressors)
@@ -89,6 +90,7 @@ public class GetInfoGuard : MonoBehaviour
         }
     }
 
+    /*Useful function to tell if a target is on sight or not*/
     bool CanSeeTarget(GameObject target)
     {
 
@@ -100,18 +102,15 @@ public class GetInfoGuard : MonoBehaviour
 
             if (Physics.Raycast(transform.position, rayDirection, out hit))
             {
-                //Debug.Log("Tag : " + hit.transform.tag);
                 if (hit.transform.tag == target.tag)
                 {
-                    //Debug.Log("Saw: " + target.tag);
-                    if (Vector3.Distance(transform.position, target.transform.position) < 20)
+                    if (Vector3.Distance(transform.position, target.transform.position) < 20) //Only see targets from less than 20m
                         return true;
                     else
                         return false;
                 }
                 else
                 {
-                    //Debug.Log("Saw Nothing");
                     return false;
                 }
             }
@@ -120,7 +119,8 @@ public class GetInfoGuard : MonoBehaviour
         return false;
     }
 
-    bool IsClosest(GameObject current, GameObject prev)
+    /* tells whether a given object is closer than another one or not*/
+    bool IsCloser(GameObject current, GameObject prev)
     {
         return (Vector3.Distance(current.transform.position, transform.position) < Vector3.Distance(prev.transform.position, transform.position));
     }
