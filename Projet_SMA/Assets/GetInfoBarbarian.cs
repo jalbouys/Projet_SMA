@@ -42,20 +42,26 @@ public class GetInfoBarbarian : MonoBehaviour
             {
                 guards.Add(guard);
                 if (target == null && guard.GetComponent<GetInfoGuard>().agressors.Count < 2) // Only choose as target if less than 2 attacking him
+                {
                     target = guard;
+                    guard.GetComponent<GetInfoGuard>().agressors.Add(gameObject);
+                }
             }
         }
-        
+
         //adding villagers
         foreach (GameObject villager in GameObject.FindGameObjectsWithTag("Villager"))
         {
             if (CanSeeTarget(villager)) //looking for on-sight villagers
             {
                 villagers.Add(villager);
-                if ((target == null) || (hitVillagersOverGuards && target.tag == "Guard"))
-                {
-                    if (villager.GetComponent<GetInfoVillager>().agressors.Count < 2)
+                if ((target == null) || (hitVillagersOverGuards && target.tag == "Guard")) // In case target is not null and Villager 
+                {                                                                // has priority, we change for the new target
+                    if (villager.GetComponent<GetInfoVillager>().agressors.Count < 2)// Only choose as target if less than 2 attacking him
+                    {
                         target = villager;
+                        villager.GetComponent<GetInfoVillager>().agressors.Add(gameObject);
+                    }
                 }
             }
         }
@@ -96,7 +102,10 @@ public class GetInfoBarbarian : MonoBehaviour
             {
                 guards.Add(guard);
                 if (target == null && guard.GetComponent<GetInfoGuard>().agressors.Count < 2) // Only choose as target if less than 2 attacking him
+                {
                     target = guard;
+                    guard.GetComponent<GetInfoGuard>().agressors.Add(gameObject);
+                }
             }
         }
 
@@ -108,8 +117,11 @@ public class GetInfoBarbarian : MonoBehaviour
                 villagers.Add(villager);
                 if ((target == null) || (hitVillagersOverGuards && target.tag == "Guard")) // In case target is not null and Villager 
                 {                                                                // has priority, we change for the new target
-                    if (villager.GetComponent<GetInfoVillager>().agressors.Count < 2) // Only choose as target if less than 2 attacking him
+                    if (villager.GetComponent<GetInfoVillager>().agressors.Count < 2)// Only choose as target if less than 2 attacking him
+                    { 
                         target = villager;
+                        villager.GetComponent<GetInfoVillager>().agressors.Add(gameObject);
+                    }
                 }
             }
         }

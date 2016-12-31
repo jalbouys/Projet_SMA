@@ -40,7 +40,13 @@ public class BarbarianCommunication : MonoBehaviour {
                     {
                         if ((barbarianTarget.tag == "Guard" && barbarianTarget.GetComponent<GetInfoGuard>().agressors.Count < 2) ||
                             (barbarianTarget.tag == "Villager" && barbarianTarget.GetComponent<GetInfoVillager>().agressors.Count < 2))
+                        {
                             myAttack.Target = barbarianTarget;
+                            if (barbarianTarget.tag == "Guard")
+                                barbarianTarget.GetComponent<GetInfoGuard>().agressors.Add(gameObject);
+                            else
+                                barbarianTarget.GetComponent<GetInfoVillager>().agressors.Add(gameObject);
+                        }
                     }
 
                 }    

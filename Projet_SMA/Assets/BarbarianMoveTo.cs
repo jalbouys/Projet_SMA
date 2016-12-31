@@ -12,7 +12,7 @@ public class BarbarianMoveTo : MonoBehaviour {
     private NavMeshAgent agent;
     private string debugMsg = "";
     private Vector3 previousTargetPosition;
-    private Vector3 villageEntrance = new Vector3(-18, 0, 20);
+    private Vector3 villageCenter = new Vector3(-23, 0, -20);
     private bool movingToVillage = false;
 
     private GameObject target = null;
@@ -52,7 +52,7 @@ public class BarbarianMoveTo : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+        
         Vector3 fwd = transform.TransformDirection(Vector3.forward);
         if (Target != null)
         {
@@ -67,6 +67,11 @@ public class BarbarianMoveTo : MonoBehaviour {
         else if (movingToVillage)
         {
             debugMsg = "Moving towards village";
+            if (Vector3.Distance(transform.position, villageCenter) < 4)
+            {
+                movingToVillage = false;
+                agent.areaMask = 8; //village area mask
+            }
         }
         else// no enemy in sight => wander around
         {
@@ -92,8 +97,8 @@ public class BarbarianMoveTo : MonoBehaviour {
     /*Move towards village entrance set in villageEntrance variable*/
     public void moveToVillage()
     {
-        GetComponent<NavMeshAgent>().SetDestination(villageEntrance);
-        transform.LookAt(villageEntrance);
+        GetComponent<NavMeshAgent>().SetDestination(villageCenter);
+        transform.LookAt(villageCenter);
         movingToVillage = true;
     }
 
