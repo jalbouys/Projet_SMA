@@ -2,10 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
-/// <summary>
-/// gets list of all other agents on the field
-/// </summary>
-
+/*This script contains all the information for guard agents :
+    list of known/seen barbarians,guards,villagers,agressors
+    hp, target, attacker,...
+     */
 public class GetInfoVillager : MonoBehaviour
 {
 
@@ -18,15 +18,16 @@ public class GetInfoVillager : MonoBehaviour
     public GameObject attacker = null;
     public int fieldOfViewRange = 60;
 
-    // Use this for initialization
+    /*Initialize the lists of barbarians, guards and villagers
+        set a target if any barbarian on sight...*/
     void Start()
     {
         foreach (GameObject barbarian in GameObject.FindGameObjectsWithTag("Barbarian"))
         {
-            if (CanSeeTarget(barbarian))
+            if (CanSeeTarget(barbarian))//If barbarian on sight
             {
-                barbarians.Add(barbarian);
-                if (attacker == null || IsClosest(barbarian,attacker))
+                barbarians.Add(barbarian);//add him to the list
+                if (attacker == null || IsCloser(barbarian,attacker)) //should not be done like that, needs to be changed
                     attacker = barbarian;
             }
         }
@@ -48,10 +49,10 @@ public class GetInfoVillager : MonoBehaviour
         agressors.RemoveAll(item => item == null);
         foreach (GameObject barbarian in GameObject.FindGameObjectsWithTag("Barbarian"))
         {
-            if (CanSeeTarget(barbarian))
+            if (CanSeeTarget(barbarian)) //If barbarian on sight
             {
-                barbarians.Add(barbarian);
-                if (attacker == null || IsClosest(barbarian, attacker))
+                barbarians.Add(barbarian); //add him to the list
+                if (attacker == null || IsCloser(barbarian, attacker))
                     attacker = barbarian;
             }
         }
@@ -60,12 +61,13 @@ public class GetInfoVillager : MonoBehaviour
         foreach (GameObject villager in GameObject.FindGameObjectsWithTag("Villager"))
         { villagers.Add(villager); }
 
-        if(barbarians.Count > 3)
+        if(barbarians.Count > 3) //If more than 3 barbarians seen, understand that village is being invaded
         {
             GetComponent<VillagerMoveTo>().villageInvaded = true;
         }
-        //Debug.Log(hp);
-        if(hp <= 0)
+        
+        //Deal with death of agent
+        if (hp <= 0)
         {
             foreach (GameObject agressor in agressors)
             {
@@ -78,7 +80,7 @@ public class GetInfoVillager : MonoBehaviour
         GetComponent<VillagerMoveTo>().Attacker = attacker;
     }
 
-
+    /*Useful function to tell if a target is on sight or not*/
     bool CanSeeTarget(GameObject target)
     {
 
@@ -90,15 +92,15 @@ public class GetInfoVillager : MonoBehaviour
 
             if (Physics.Raycast(transform.position, rayDirection, out hit))
             {
-                //Debug.Log("Tag : " + hit.transform.tag);
                 if (hit.transform.tag == target.tag)
                 {
-                    //Debug.Log("Saw: " + target.tag);
-                    return true;
+                    if (Vector3.Distance(transform.position, target.transform.position) < 20) //Only see targets from less than 20m
+                        return true;
+                    else
+                        return false;
                 }
                 else
                 {
-                    //Debug.Log("Saw Nothing");
                     return false;
                 }
             }
@@ -107,7 +109,7 @@ public class GetInfoVillager : MonoBehaviour
         return false;
     }
 
-    bool IsClosest(GameObject current, GameObject prev)
+    bool IsCloser(GameObject current, GameObject prev)
     {
         return (Vector3.Distance(current.transform.position, transform.position) < Vector3.Distance(prev.transform.position, transform.position));
     }

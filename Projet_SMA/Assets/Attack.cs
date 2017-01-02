@@ -1,16 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/*This is the script dealing with attack behaviors for Barbarians*/
 public class Attack : MonoBehaviour {
 
     public float nextAttackTime;
-    public float attackTime = 1;//time it takes to do 1 attack
+    public float attackTime = 1; //time it takes to do 1 attack
     public bool attackingAlone = true;
     BarbarianMoveTo moveToBar;
     private GameObject target = null;
     public bool helping = false;
     public bool attacking = false;
-    public GameObject Target
+    public GameObject Target //current target of the agent
     {
         get
         {
@@ -27,7 +28,7 @@ public class Attack : MonoBehaviour {
     void Start () {
         nextAttackTime = Time.time;
         moveToBar = GetComponent<BarbarianMoveTo>();
-        moveToBar.moveToVillage();
+        moveToBar.moveToVillage(); //At first, Barbarian will move towards the village
 
     }
 	
@@ -38,9 +39,9 @@ public class Attack : MonoBehaviour {
         {
             var distance = Vector3.Distance(target.transform.position, transform.position);
             if (helping)
-                moveToBar.DebugMsg = "Coming to help!";
-            //Debug.Log(distance);
-            if (distance < 2)//if close enough, attack
+                moveToBar.DebugMsg = "Coming to help!"; // debug message to let us know if he is attacking to help or just for fun
+
+            if (distance < 2) //if close enough, attack
             {
                 attacking = true;
                 moveToBar.DebugMsg = "Attacking: " + target.tag;
@@ -53,12 +54,13 @@ public class Attack : MonoBehaviour {
         else if(target == null || attacking == false)
         {
             GetComponent<Animation>().Stop("Lumbering");//stop attacking
-            GetComponent<Animation>().Play("Walk");//stop attacking
+            GetComponent<Animation>().Play("Walk");//start walking again
             attacking = false;
-            helping = false;
+            helping = false; //not helping nor attacking anymore
         }
     }
 
+    /*attack function, can be either for a villager target or a guard*/
     void attack(GameObject target)
     {
         
@@ -66,27 +68,21 @@ public class Attack : MonoBehaviour {
         nextAttackTime = Time.time + attackTime;//time when the next attack can happen
         GetInfoVillager targetInfoV;
         GetInfoGuard targetInfoG;
-        if (target.tag == "Villager")
+        if (target.tag == "Villager") /*case of villager, call GetInfoVillager script */
         {
             targetInfoV = target.GetComponent<GetInfoVillager>();
             targetInfoV.agressors.Add(gameObject);
             attackingAlone = (targetInfoV.agressors.Count == 1);
             targetInfoV.hp -= 10;//remove 10HP from victim
             targetInfoV.attacker = transform.gameObject;
-            //Debug.Log("Whack! ");
-            //Debug.Log(targetInfoV.hp);
-            //Debug.Log(" HP left\n");
         }
-        else
+        else /*case of guard, call GetInfoGuard script, same action as above */
         {
             targetInfoG = target.GetComponent<GetInfoGuard>();
             targetInfoG.agressors.Add(gameObject);
             attackingAlone = (targetInfoG.agressors.Count == 1);
             targetInfoG.hp -= 10;//remove 10HP from victim
             targetInfoG.attacker = transform.gameObject;
-            //Debug.Log("Whack! ");
-            //Debug.Log(targetInfoG.hp);
-            //Debug.Log(" HP left\n");
         }
     }
 

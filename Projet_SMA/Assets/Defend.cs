@@ -2,14 +2,15 @@
 using System.Collections;
 
 
+/*This is the script dealing with defense behaviors for Guards*/
 public class Defend : MonoBehaviour
 {
 
     public float nextAttackTime;
-    public float attackTime = 1;//time it takes to do 1 attack
-    public bool helping = false;
+    public float attackTime = 1; //time it takes to do 1 attack
+    public bool helping = false; //Boolean to tell if guard is helping someone or not
     private GameObject target = null;
-    public GameObject Target
+    public GameObject Target //current target of the agent
     {
         get
         {
@@ -25,7 +26,7 @@ public class Defend : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        nextAttackTime = Time.time;
+        nextAttackTime = Time.time; //init the attack time
 
 
     }
@@ -37,7 +38,6 @@ public class Defend : MonoBehaviour
         if (Target != null)
         {
             var distance = Vector3.Distance(target.transform.position, transform.position);
-            //Debug.Log(distance);
             if (distance < 2)//if close enough, attack
             {
                 if (Time.time > nextAttackTime)
@@ -46,10 +46,11 @@ public class Defend : MonoBehaviour
         }
         else if (Target == null)
         {
-            //GetComponent<Animation>().Stop("Jump");//stop attacking
+            //no need to defend
         }
     }
 
+    /*attack function, no need for more comment...*/
     void attack(GameObject target)
     {
 
@@ -60,9 +61,6 @@ public class Defend : MonoBehaviour
         targetInfo.agressors.Add(gameObject);
         targetInfo.hp -= 10;//remove 10HP from victim
         targetInfo.attacker = transform.gameObject;
-        //Debug.Log("Whack! ");
-        //Debug.Log(targetInfo.hp);
-        //Debug.Log(" HP left\n");
     }
 
 }

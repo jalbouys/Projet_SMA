@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/*Script related to movements of guard agents*/
 public class GuardMoveTo : MonoBehaviour {
     
-    public Transform[] points;
+    public Transform[] points; //patrolling parameters
     private int destPoint = 0;
+
     private NavMeshAgent agent;
     public bool attacked = false;
     private string debugMsg = "";
@@ -12,7 +14,7 @@ public class GuardMoveTo : MonoBehaviour {
     public bool patrolling = true;
     private bool defending = false;
 
-    public string DebugMsg
+    public string DebugMsg //debugging string, for on-screen debug
     {
         get
         {
@@ -24,7 +26,7 @@ public class GuardMoveTo : MonoBehaviour {
             debugMsg = value;
         }
     }
-    public GameObject Target
+    public GameObject Target //agent's target
     {
         get
         {
@@ -39,16 +41,13 @@ public class GuardMoveTo : MonoBehaviour {
     // Use this for initialization
     void Start () {
         agent = GetComponent<NavMeshAgent>();
-
-        // Disabling auto-braking allows for continuous movement
-        // between points (ie, the agent doesn't slow down as it
-        // approaches a destination point).
         agent.autoBraking = false;
 
        GotoNextPoint();
     }
 
 
+    //patrolling function, to move from one point to another one
     void GotoNextPoint()
     {
         // Returns if no points have been set up
@@ -66,16 +65,14 @@ public class GuardMoveTo : MonoBehaviour {
 
     void Update()
     {
-        // Choose the next destination point when the agent gets
-        // close to the current one.
+
         if (attacked == true)
         {
             debugMsg = "Alert!";
         }
-       else if ((agent.remainingDistance < 1.5f) && patrolling)
+       else if ((agent.remainingDistance < 1.5f) && patrolling) //patrolling routine
             GotoNextPoint();
-
-        if(Target != null)
+       if(Target != null)
         {
             var distance = Vector3.Distance(Target.transform.position, transform.position);
             if (distance > 30) //target too far, keep patrolling
@@ -114,6 +111,7 @@ public class GuardMoveTo : MonoBehaviour {
         }
     }
 
+    /*Function used to move to a given target*/
     void MoveToTarget(GameObject target)
     {
         agent.destination = target.transform.position;

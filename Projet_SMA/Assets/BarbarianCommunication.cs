@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/*Communication script for barbarians*/
 public class BarbarianCommunication : MonoBehaviour {
 
     public List<GameObject> otherBarbarians;
@@ -9,6 +10,7 @@ public class BarbarianCommunication : MonoBehaviour {
     public int hp = 100;
     public bool attacked = false;
 
+    /*message handler function*/
     void MessageReceived(string message)
     {
             // We received an help message, we try to find who sent it
@@ -19,9 +21,8 @@ public class BarbarianCommunication : MonoBehaviour {
         var distance = Vector3.Distance(barbarian.transform.position, transform.position);
         if (distance < 10 && barbarian.transform.position != transform.position)//looking for a barbarian near us
         {
-            if (message == "help")
+            if (message == "help") // case of "help" message received
             {
-                   // Debug.Log("received help");
                 GameObject barbarianTarget = barbarian.GetComponent<Attack>().Target;
                 if (barbarian.GetComponent<BarbarianCommunication>().hp < 50 && barbarianTarget != null)
                 {
@@ -31,7 +32,7 @@ public class BarbarianCommunication : MonoBehaviour {
                     GetComponent<BarbarianMoveTo>().DebugMsg = "Coming to help!";
                 }
             }
-            else if (message == "attacking")
+            else if (message == "attacking") // case of "attacking" message received
                 {
                     GameObject barbarianTarget = barbarian.GetComponent<BarbarianMoveTo>().Target;
                     Attack myAttack = GetComponent<Attack>();
@@ -39,7 +40,13 @@ public class BarbarianCommunication : MonoBehaviour {
                     {
                         if ((barbarianTarget.tag == "Guard" && barbarianTarget.GetComponent<GetInfoGuard>().agressors.Count < 2) ||
                             (barbarianTarget.tag == "Villager" && barbarianTarget.GetComponent<GetInfoVillager>().agressors.Count < 2))
+                        {
                             myAttack.Target = barbarianTarget;
+                            if (barbarianTarget.tag == "Guard")
+                                barbarianTarget.GetComponent<GetInfoGuard>().agressors.Add(gameObject);
+                            else
+                                barbarianTarget.GetComponent<GetInfoVillager>().agressors.Add(gameObject);
+                        }
                     }
 
                 }    
@@ -47,7 +54,7 @@ public class BarbarianCommunication : MonoBehaviour {
        }
     }
 
-    // Use this for initialization
+    /*initialize the list of barbarians at the beginning*/
     void Start()
     {
         foreach (GameObject otherBarbarian in GameObject.FindGameObjectsWithTag("Barbarian"))
@@ -59,17 +66,17 @@ public class BarbarianCommunication : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        otherBarbarians.RemoveAll(item => item == null);
+        otherBarbarians.RemoveAll(item => item == null); //remove null items to avoid errors below
         hp = GetComponent<GetInfoBarbarian>().hp;
-        foreach (GameObject barbarian in otherBarbarians)
+        foreach (GameObject barbarian in otherBarbarians) //check all the barbarians
         {
             var distance = Vector3.Distance(barbarian.transform.position, transform.position);
             if (distance < 10 && barbarian.transform.position != transform.position)//if other barbarian is less than 10m away...
             {
                 if (hp < 50 && GetComponent<GetInfoBarbarian>().agressors.Count != 0 && GetComponent<Attack>().attackingAlone)
-                    barbarian.GetComponent<BarbarianCommunication>().MessageReceived("help");
+                    barbarian.GetComponent<BarbarianCommunication>().MessageReceived("help"); //ask for help
                 else if (GetComponent<BarbarianMoveTo>().Target != null)
-                    barbarian.GetComponent<BarbarianCommunication>().MessageReceived("attacking");
+                    barbarian.GetComponent<BarbarianCommunication>().MessageReceived("attacking");//send the target to our friends around
                 
             }
         }

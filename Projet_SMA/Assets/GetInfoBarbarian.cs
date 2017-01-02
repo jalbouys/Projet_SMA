@@ -2,10 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 
-/// <summary>
-/// gets list of all other agents on the field
-/// </summary>
 
+
+/*This script contains all the information for barbarian agents :
+    list of known/seen barbarians,guards,villagers,agressors
+    hp, target, attacker,...
+     */
 public class GetInfoBarbarian : MonoBehaviour
 {
 
@@ -16,82 +18,117 @@ public class GetInfoBarbarian : MonoBehaviour
     public int hp = 100;
     public bool hitVillagersOverGuards = false;
     public bool findChestMode = true;
-    public GameObject target = null;//or target pos?
+    public GameObject target = null;
     public GameObject attacker;
     public int fieldOfViewRange = 60;
     
 
-    // Use this for initialization
+    /*Initialize the lists of barbarians, guards and villagers
+        set a target if anybody in sight...*/
     void Start()
     {
         hitVillagersOverGuards = false;
         findChestMode = true;
         GameObject chest = GameObject.FindGameObjectWithTag("Chest");
+
+        //adding barbarians
         foreach (GameObject barbarian in GameObject.FindGameObjectsWithTag("Barbarian"))
         { barbarians.Add(barbarian); }
+
+        //adding guards
         foreach (GameObject guard in GameObject.FindGameObjectsWithTag("Guard"))
         {
-            if (CanSeeTarget(guard))
+            if (CanSeeTarget(guard)) //looking for on-sight guards
             {
                 guards.Add(guard);
                 if (target == null && guard.GetComponent<GetInfoGuard>().agressors.Count < 2) // Only choose as target if less than 2 attacking him
-                    target = guard;
-            }
-        }
-        foreach (GameObject villager in GameObject.FindGameObjectsWithTag("Villager"))
-        {
-            if (CanSeeTarget(villager))
-            {
-                villagers.Add(villager);
-                if ((target == null) || (hitVillagersOverGuards && target.tag == "Guard"))
                 {
-                    if (villager.GetComponent<GetInfoVillager>().agressors.Count < 2)
-                        target = villager;
+                    target = guard;
+                    guard.GetComponent<GetInfoGuard>().agressors.Add(gameObject);
                 }
             }
         }
+
+        //adding villagers
+        foreach (GameObject villager in GameObject.FindGameObjectsWithTag("Villager"))
+        {
+            if (CanSeeTarget(villager)) //looking for on-sight villagers
+            {
+                villagers.Add(villager);
+                if ((target == null) || (hitVillagersOverGuards && target.tag == "Guard")) // In case target is not null and Villager 
+                {                                                                // has priority, we change for the new target
+                    if (villager.GetComponent<GetInfoVillager>().agressors.Count < 2)// Only choose as target if less than 2 attacking him
+                    {
+                        target = villager;
+                        villager.GetComponent<GetInfoVillager>().agressors.Add(gameObject);
+                    }
+                }
+            }
+        }
+        //look for the chest, depending on the objective
         if (CanSeeTarget(chest) && findChestMode)
             target = chest;
+        
+        //update the target
         GetComponent<BarbarianMoveTo>().Target = target;
         GetComponent<Attack>().Target = target;
     }
 
-    // Update is called once per frame
+    /*Called once a frame: Gets the new lists of barbarians, guards and villagers
+        (in case someone died) set a target if anybody in sight...*/
     void Update()
     {
+        //check hp and target from communication script in case it has changed...
         GetComponent<BarbarianCommunication>().hp = hp;
         GetComponent<BarbarianCommunication>().target = target;
+
         GameObject chest = GameObject.FindGameObjectWithTag("Chest");
+
         barbarians.Clear();
         guards.Clear();
         villagers.Clear();
+
+        //remove all the agressors who died since last update
         agressors.RemoveAll(item => item == null);
+        
+        //adding barbarians
         foreach (GameObject barbarian in GameObject.FindGameObjectsWithTag("Barbarian"))
         { barbarians.Add(barbarian); }
+
+        //adding guards
         foreach (GameObject guard in GameObject.FindGameObjectsWithTag("Guard"))
         {
-            if (CanSeeTarget(guard))
+            if (CanSeeTarget(guard)) //looking for on-sight guards
             {
                 guards.Add(guard);
-                if (target == null && guard.GetComponent<GetInfoGuard>().agressors.Count < 2)
-                    target = guard;
-            }
-
-        }
-        foreach (GameObject villager in GameObject.FindGameObjectsWithTag("Villager"))
-        {
-            if (CanSeeTarget(villager))
-            {
-                villagers.Add(villager);
-                if ((target == null) || (hitVillagersOverGuards && target.tag == "Guard"))
+                if (target == null && guard.GetComponent<GetInfoGuard>().agressors.Count < 2) // Only choose as target if less than 2 attacking him
                 {
-                    if (villager.GetComponent<GetInfoVillager>().agressors.Count < 2)
-                        target = villager;
+                    target = guard;
+                    guard.GetComponent<GetInfoGuard>().agressors.Add(gameObject);
                 }
             }
         }
+
+        //adding villagers
+        foreach (GameObject villager in GameObject.FindGameObjectsWithTag("Villager"))
+        {
+            if (CanSeeTarget(villager)) //looking for on-sight villagers
+            {
+                villagers.Add(villager);
+                if ((target == null) || (hitVillagersOverGuards && target.tag == "Guard")) // In case target is not null and Villager 
+                {                                                                // has priority, we change for the new target
+                    if (villager.GetComponent<GetInfoVillager>().agressors.Count < 2)// Only choose as target if less than 2 attacking him
+                    { 
+                        target = villager;
+                        villager.GetComponent<GetInfoVillager>().agressors.Add(gameObject);
+                    }
+                }
+            }
+        }
+        //look for the chest, depending on the objective
         if (CanSeeTarget(chest) && findChestMode)
             target = chest;
+
         if ((villagers.Count == 0) && (guards.Count == 0))//Did not see anybody
         { 
             GetComponent<BarbarianMoveTo>().Target = null;
@@ -105,7 +142,7 @@ public class GetInfoBarbarian : MonoBehaviour
             GetComponent<BarbarianCommunication>().target = target;
         }
 
-
+        // In case of no hp left, we destroy the object and all the pointers to it...
         if (hp <= 0)
         {
             foreach (GameObject agressor in agressors)
@@ -117,6 +154,7 @@ public class GetInfoBarbarian : MonoBehaviour
         }
     }
 
+    /*Useful function to tell if a target is on sight or not*/
     bool CanSeeTarget(GameObject target)
     {
         
@@ -128,15 +166,15 @@ public class GetInfoBarbarian : MonoBehaviour
                 
                 if (Physics.Raycast(transform.position,rayDirection,out hit))
                 {
-                    //Debug.Log("Tag : " + hit.transform.tag);
                     if (hit.transform.tag == target.tag)
                     {
-                        //Debug.Log("Saw: " + target.tag);
+                    if (Vector3.Distance(transform.position, target.transform.position) < 20)
                         return true;
-                    }
+                    else
+                        return false;
+                }
                     else
                     {
-                        //Debug.Log("Saw Nothing");
                         return false;
                     }
                 }

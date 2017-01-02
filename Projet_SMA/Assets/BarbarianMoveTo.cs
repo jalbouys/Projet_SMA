@@ -1,21 +1,23 @@
 ﻿using System.Collections;
 using UnityEngine;
 
+/*Script related to movements of barbarian agents*/
 public class BarbarianMoveTo : MonoBehaviour {
 
-    private GameObject target = null;
 
-    public float wanderRadius = 100;
+    public float wanderRadius = 100;//random wandering variables
     public float wanderTimer = 5;
-
     private float timer;
+
     private NavMeshAgent agent;
     private string debugMsg = "";
     private Vector3 previousTargetPosition;
-    private Vector3 villageEntrance = new Vector3(-18, 0, 20);
-    private RaycastHit villageHit = new RaycastHit();
+    private Vector3 villageCenter = new Vector3(-23, 0, -20);
+    private bool movingToVillage = false;
 
-    public GameObject Target
+    private GameObject target = null;
+
+    public GameObject Target //agent's target
     {
         get
         {
@@ -28,7 +30,7 @@ public class BarbarianMoveTo : MonoBehaviour {
         }
     }
 
-    public string DebugMsg
+    public string DebugMsg //debugging string, for on-screen debug
     {
         get
         {
@@ -45,25 +47,43 @@ public class BarbarianMoveTo : MonoBehaviour {
     void Start () {
 
         agent = GetComponent<NavMeshAgent>();
-        villageHit.point = villageEntrance;
         timer = wanderTimer;
     }
 	
 	// Update is called once per frame
 	void Update () {
+        
         Vector3 fwd = transform.TransformDirection(Vector3.forward);
-        if (Target != null) 
+        if (Target != null)
         {
             Attack barbAttack = GetComponent<Attack>();
-            if (!barbAttack.helping && !barbAttack.attacking)
+            if (!barbAttack.helping && !barbAttack.attacking) //test to avoid message erasing
             {
-                    debugMsg = "Target locked: " + target.tag;
+                debugMsg = "Target locked: " + target.tag;
             }
-            MoveToTarget(Target);
+            MoveToTarget(Target); //move towards the target
+            movingToVillage = false; //make sure that we are not moving towards village anymore
+        }
+        else if (movingToVillage)
+        {
+            debugMsg = "Moving towards village";
+            if (Vector3.Distance(transform.position, villageCenter) < 4)
+            {
+                movingToVillage = false;
+                agent.areaMask = 8; //village area mask
+            }
         }
         else// no enemy in sight => wander around
         {
             debugMsg = "Wandering around...";
+            Attack barbAttack = GetComponent<Attack>();
+
+            if (barbAttack.helping) //force variables to false, because bugged otherwise
+                barbAttack.helping = false;
+
+            if (barbAttack.attacking)
+                barbAttack.attacking = false;
+
             timer += Time.deltaTime;
             if (timer >= wanderTimer)
             {
@@ -74,13 +94,15 @@ public class BarbarianMoveTo : MonoBehaviour {
         }
     }
 
-
+    /*Move towards village entrance set in villageEntrance variable*/
     public void moveToVillage()
     {
-        GetComponent<NavMeshAgent>().destination = villageHit.point;
-        transform.LookAt(villageHit.point);
+        GetComponent<NavMeshAgent>().SetDestination(villageCenter);
+        transform.LookAt(villageCenter);
+        movingToVillage = true;
     }
 
+    /*Function used to move to a given target*/
     void MoveToTarget(GameObject target)
     {
         agent.destination = target.transform.position;
@@ -88,7 +110,7 @@ public class BarbarianMoveTo : MonoBehaviour {
         transform.LookAt(target.transform.position);
     }
 
-    //wander stuff
+    //random wander stuff
     public static Vector3 RandomNavSphere(Vector3 origin, float dist, int layermask)
     {
         Vector3 randDirection = Random.insideUnitSphere * dist;
