@@ -75,21 +75,28 @@ public class BarbarianMoveTo : MonoBehaviour {
         }
         else// no enemy in sight => wander around
         {
-            debugMsg = "Wandering around...";
-            Attack barbAttack = GetComponent<Attack>();
-
-            if (barbAttack.helping) //force variables to false, because bugged otherwise
-                barbAttack.helping = false;
-
-            if (barbAttack.attacking)
-                barbAttack.attacking = false;
-
-            timer += Time.deltaTime;
-            if (timer >= wanderTimer)
+            if (agent.areaMask != 8) // In case he hasn't entered the village yet
             {
-                Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
-                agent.SetDestination(newPos);
-                timer = 0;
+                moveToVillage();
+            }
+            else
+            {
+                debugMsg = "Wandering around...";
+                Attack barbAttack = GetComponent<Attack>();
+
+                if (barbAttack.helping) //force variables to false, because bugged otherwise
+                    barbAttack.helping = false;
+
+                if (barbAttack.attacking)
+                    barbAttack.attacking = false;
+
+                timer += Time.deltaTime;
+                if (timer >= wanderTimer)
+                {
+                    Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
+                    agent.SetDestination(newPos);
+                    timer = 0;
+                }
             }
         }
     }
