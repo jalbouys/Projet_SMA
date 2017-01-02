@@ -17,7 +17,7 @@ public class GuardMoveTo : MonoBehaviour {
     public bool attacked = false;
     private string debugMsg = "";
     private GameObject target;
-    public bool patrolling = false;
+    public bool patrolling = true;
     private bool defending = false;
 
     public string DebugMsg //debugging string, for on-screen debug
@@ -48,7 +48,7 @@ public class GuardMoveTo : MonoBehaviour {
     void Start () {
         agent = GetComponent<NavMeshAgent>();
         agent.autoBraking = false;
-        patrolling = false;
+        patrolling = true;
         timer = wanderTimer;//for wandering
 
        GotoNextPoint();
@@ -93,6 +93,7 @@ public class GuardMoveTo : MonoBehaviour {
         }
        else if ((agent.remainingDistance < 1.5f) && patrolling) //patrolling routine
             GotoNextPoint();
+
        if(Target != null)
         {
             patrolling = false;//got a target => the attack has started
@@ -132,15 +133,32 @@ public class GuardMoveTo : MonoBehaviour {
                 defending = false;
                 GetComponent<Defend>().helping = false;
             }
-            else
+            else//wandering
             {
-                debugMsg = "Wandering...";
-                //agent.areaMask = 8; //village area masktimer += Time.deltaTime;
-                if (timer >= wanderTimer)
+                defending = false;
+                GetComponent<Defend>().helping = false;
+
+                if (agent.areaMask != 8)//not in village yet
                 {
-                    Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
-                    agent.SetDestination(newPos);
-                    timer = 0;
+                    if (Vector3.Distance(transform.position, villageCenter) < 10)
+                    {
+                        agent.areaMask = 8; //village area mask
+                    }
+
+                    GetComponent<NavMeshAgent>().SetDestination(villageCenter);
+                    transform.LookAt(villageCenter);
+                }
+                else
+                {
+                    debugMsg = "Wandering...";
+                    //agent.areaMask = 8; //village area mask
+                    timer += Time.deltaTime;
+                    if (timer >= wanderTimer)
+                    {
+                        Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
+                        agent.SetDestination(newPos);
+                        timer = 0;
+                    }
                 }
             }
         }
