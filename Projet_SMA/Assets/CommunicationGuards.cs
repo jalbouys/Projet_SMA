@@ -10,7 +10,7 @@ public class CommunicationGuards : MonoBehaviour {
     public GameObject target;
     public int hp = 100;
     public bool attacked = false;
-    public int shoutingDistance = 10;
+    public int shoutingDistance = 20;
 
     void MessageReceived(string message)
     {
@@ -46,7 +46,7 @@ public class CommunicationGuards : MonoBehaviour {
                 if (distance < shoutingDistance && villager.transform.position != transform.position)//looking for a villager near us
                 {
                     GameObject villagerAttacker = villager.GetComponent<VillagerMoveTo>().Attacker;
-                    if (villager.GetComponent<CommunicationGuards>().hp < 20 && villagerAttacker != null)
+                    if (villager.GetComponent<CommunicationGuards>().hp < 40 && villagerAttacker != null)
                     {
                         GetComponent<Defend>().Target = villagerAttacker; //We found our friend who needs help, we change our target for his...
                         GetComponent<GuardMoveTo>().Target = villagerAttacker;
@@ -88,7 +88,7 @@ public class CommunicationGuards : MonoBehaviour {
             foreach (GameObject guard in otherGuards)
             {
                 var distance = Vector3.Distance(guard.transform.position, transform.position);
-                if (distance < shoutingDistance && guard.transform.position != transform.position)//if other guard is less than 10m away...
+                if (distance < shoutingDistance && guard.transform.position != transform.position)//if other guard is less than shoutingDistance away...
                 {
                     if (hp < 50 && GetComponent<Defend>().Target != null)
                         guard.GetComponent<CommunicationGuards>().MessageReceived("help guard"); //ask for help from a guard
@@ -101,7 +101,7 @@ public class CommunicationGuards : MonoBehaviour {
             foreach (GameObject guard in otherGuards)
             {
                 var distance = Vector3.Distance(guard.transform.position, transform.position);
-                if (distance < shoutingDistance && guard.transform.position != transform.position)//if guard is less than 10m away...
+                if (distance < shoutingDistance && guard.transform.position != transform.position)//if guard is less than shoutingDistance away...
                 {
                     if (hp < 20 && GetComponent<VillagerMoveTo>().Attacker != null) // if low life + being attacked: ask for help from guard
                         guard.GetComponent<CommunicationGuards>().MessageReceived("help villager");
@@ -111,7 +111,7 @@ public class CommunicationGuards : MonoBehaviour {
             foreach (GameObject villager in otherVillagers)
             {
                 var distance = Vector3.Distance(villager.transform.position, transform.position);
-                if (distance < shoutingDistance && villager.transform.position != transform.position)//if villager is less than 10m away...
+                if (distance < shoutingDistance && villager.transform.position != transform.position)//if villager is less than shoutingDistance away...
                 {
                     if (GetComponent<VillagerMoveTo>().Attacker != null) // if there is an attacker, send it to our friends around
                         villager.GetComponent<CommunicationGuards>().MessageReceived("ennemy:" + GetComponent<VillagerMoveTo>().Attacker.name);

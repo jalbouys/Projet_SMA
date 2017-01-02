@@ -20,9 +20,13 @@ public class GetInfoBarbarian : MonoBehaviour
     public bool findChestMode = true;
     public GameObject target = null;
     public GameObject attacker;
-    public int fieldOfViewRange = 60;
     public int agressorsLimit = 3;
-    
+
+    //senses parameters
+    public int fieldOfViewRange = 60; 
+    public int sightRange = 40;
+    public int smellRange = 5;
+
 
     /*Initialize the lists of barbarians, guards and villagers
         set a target if anybody in sight...*/
@@ -39,7 +43,7 @@ public class GetInfoBarbarian : MonoBehaviour
         //adding guards
         foreach (GameObject guard in GameObject.FindGameObjectsWithTag("Guard"))
         {
-            if (CanSeeTarget(guard)) //looking for on-sight guards
+            if (CanSeeTarget(guard) || CanSmellTarget(guard)) //looking for on-sight guards
             {
                 guards.Add(guard);
                 if (target == null && guard.GetComponent<GetInfoGuard>().agressors.Count < agressorsLimit) // Only choose as target if less than 2 attacking him
@@ -54,7 +58,7 @@ public class GetInfoBarbarian : MonoBehaviour
         //adding villagers
         foreach (GameObject villager in GameObject.FindGameObjectsWithTag("Villager"))
         {
-            if (CanSeeTarget(villager)) //looking for on-sight villagers
+            if (CanSeeTarget(villager) || CanSmellTarget(villager)) //looking for on-sight villagers
             {
                 villagers.Add(villager);
                 if ((target == null) || (hitVillagersOverGuards && target.tag == "Guard")) // In case target is not null and Villager 
@@ -101,7 +105,7 @@ public class GetInfoBarbarian : MonoBehaviour
         //adding guards
         foreach (GameObject guard in GameObject.FindGameObjectsWithTag("Guard"))
         {
-            if (CanSeeTarget(guard)) //looking for on-sight guards
+            if (CanSeeTarget(guard) || CanSmellTarget(guard)) //looking for on-sight guards
             {
                 guards.Add(guard);
                 if (target == null && guard.GetComponent<GetInfoGuard>().agressors.Count < agressorsLimit) // Only choose as target if less than 2 attacking him
@@ -116,7 +120,7 @@ public class GetInfoBarbarian : MonoBehaviour
         //adding villagers
         foreach (GameObject villager in GameObject.FindGameObjectsWithTag("Villager"))
         {
-            if (CanSeeTarget(villager)) //looking for on-sight villagers
+            if (CanSeeTarget(villager) || CanSmellTarget(villager)) //looking for on-sight villagers
             {
                 villagers.Add(villager);
                 if ((target == null) || (hitVillagersOverGuards && target.tag == "Guard")) // In case target is not null and Villager 
@@ -173,7 +177,7 @@ public class GetInfoBarbarian : MonoBehaviour
                 {
                     if (hit.transform.tag == target.tag)
                     {
-                    if (Vector3.Distance(transform.position, target.transform.position) < 20)
+                    if (Vector3.Distance(transform.position, target.transform.position) < sightRange)
                         return true;
                     else
                         return false;
@@ -186,6 +190,13 @@ public class GetInfoBarbarian : MonoBehaviour
 
             }
             return false;
+    }
+
+    /*Tells if a target is within "smell" range*/
+    bool CanSmellTarget(GameObject target)
+    {
+        return (Vector3.Distance(transform.position, target.transform.position) < smellRange);
+
     }
 
 

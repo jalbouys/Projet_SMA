@@ -16,7 +16,11 @@ public class GetInfoVillager : MonoBehaviour
     public int hp = 100;
     public GameObject target;//or target pos?
     public GameObject attacker = null;
+
+    //senses parameters
     public int fieldOfViewRange = 60;
+    public int sightRange = 40;
+    public int smellRange = 5;
 
     /*Initialize the lists of barbarians, guards and villagers
         set a target if any barbarian on sight...*/
@@ -24,7 +28,7 @@ public class GetInfoVillager : MonoBehaviour
     {
         foreach (GameObject barbarian in GameObject.FindGameObjectsWithTag("Barbarian"))
         {
-            if (CanSeeTarget(barbarian))//If barbarian on sight
+            if (CanSeeTarget(barbarian) || CanSmellTarget(barbarian))//If barbarian on sight
             {
                 barbarians.Add(barbarian);//add him to the list
                 if (attacker == null || IsCloser(barbarian,attacker)) //should not be done like that, needs to be changed
@@ -49,7 +53,7 @@ public class GetInfoVillager : MonoBehaviour
         agressors.RemoveAll(item => item == null);
         foreach (GameObject barbarian in GameObject.FindGameObjectsWithTag("Barbarian"))
         {
-            if (CanSeeTarget(barbarian)) //If barbarian on sight
+            if (CanSeeTarget(barbarian) || CanSmellTarget(barbarian)) //If barbarian on sight
             {
                 barbarians.Add(barbarian); //add him to the list
                 if (attacker == null || IsCloser(barbarian, attacker))
@@ -94,7 +98,7 @@ public class GetInfoVillager : MonoBehaviour
             {
                 if (hit.transform.tag == target.tag)
                 {
-                    if (Vector3.Distance(transform.position, target.transform.position) < 20) //Only see targets from less than 20m
+                    if (Vector3.Distance(transform.position, target.transform.position) < sightRange) //Only see targets within sightRange
                         return true;
                     else
                         return false;
@@ -107,6 +111,13 @@ public class GetInfoVillager : MonoBehaviour
 
         }
         return false;
+    }
+
+    /*Tells if a target is within "smell" range*/
+    bool CanSmellTarget(GameObject target)
+    {
+        return (Vector3.Distance(transform.position, target.transform.position) < smellRange);
+
     }
 
     bool IsCloser(GameObject current, GameObject prev)

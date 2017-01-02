@@ -10,7 +10,7 @@ public class BarbarianCommunication : MonoBehaviour {
     public int hp = 100;
     public bool attacked = false;
     private int agressorsLimit = 3;
-    public int shoutingDistance = 10;
+    public int shoutingDistance = 20;
 
     /*message handler function*/
     void MessageReceived(string message)
