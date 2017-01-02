@@ -21,6 +21,7 @@ public class GetInfoBarbarian : MonoBehaviour
     public GameObject target = null;
     public GameObject attacker;
     public int fieldOfViewRange = 60;
+    public int agressorsLimit = 3;
     
 
     /*Initialize the lists of barbarians, guards and villagers
@@ -41,10 +42,11 @@ public class GetInfoBarbarian : MonoBehaviour
             if (CanSeeTarget(guard)) //looking for on-sight guards
             {
                 guards.Add(guard);
-                if (target == null && guard.GetComponent<GetInfoGuard>().agressors.Count < 2) // Only choose as target if less than 2 attacking him
+                if (target == null && guard.GetComponent<GetInfoGuard>().agressors.Count < agressorsLimit) // Only choose as target if less than 2 attacking him
                 {
                     target = guard;
-                    guard.GetComponent<GetInfoGuard>().agressors.Add(gameObject);
+                    if(!guard.GetComponent<GetInfoGuard>().agressors.Contains(gameObject))
+                        guard.GetComponent<GetInfoGuard>().agressors.Add(gameObject);
                 }
             }
         }
@@ -57,10 +59,11 @@ public class GetInfoBarbarian : MonoBehaviour
                 villagers.Add(villager);
                 if ((target == null) || (hitVillagersOverGuards && target.tag == "Guard")) // In case target is not null and Villager 
                 {                                                                // has priority, we change for the new target
-                    if (villager.GetComponent<GetInfoVillager>().agressors.Count < 2)// Only choose as target if less than 2 attacking him
+                    if (villager.GetComponent<GetInfoVillager>().agressors.Count < agressorsLimit)// Only choose as target if less than 2 attacking him
                     {
                         target = villager;
-                        villager.GetComponent<GetInfoVillager>().agressors.Add(gameObject);
+                        if (!villager.GetComponent<GetInfoVillager>().agressors.Contains(gameObject))
+                            villager.GetComponent<GetInfoVillager>().agressors.Add(gameObject);
                     }
                 }
             }
@@ -101,10 +104,11 @@ public class GetInfoBarbarian : MonoBehaviour
             if (CanSeeTarget(guard)) //looking for on-sight guards
             {
                 guards.Add(guard);
-                if (target == null && guard.GetComponent<GetInfoGuard>().agressors.Count < 2) // Only choose as target if less than 2 attacking him
+                if (target == null && guard.GetComponent<GetInfoGuard>().agressors.Count < agressorsLimit) // Only choose as target if less than 2 attacking him
                 {
                     target = guard;
-                    guard.GetComponent<GetInfoGuard>().agressors.Add(gameObject);
+                    if (!guard.GetComponent<GetInfoGuard>().agressors.Contains(gameObject))
+                        guard.GetComponent<GetInfoGuard>().agressors.Add(gameObject);
                 }
             }
         }
@@ -117,10 +121,11 @@ public class GetInfoBarbarian : MonoBehaviour
                 villagers.Add(villager);
                 if ((target == null) || (hitVillagersOverGuards && target.tag == "Guard")) // In case target is not null and Villager 
                 {                                                                // has priority, we change for the new target
-                    if (villager.GetComponent<GetInfoVillager>().agressors.Count < 2)// Only choose as target if less than 2 attacking him
-                    { 
+                    if (villager.GetComponent<GetInfoVillager>().agressors.Count < agressorsLimit)// Only choose as target if less than 2 attacking him
+                    {
                         target = villager;
-                        villager.GetComponent<GetInfoVillager>().agressors.Add(gameObject);
+                        if (!villager.GetComponent<GetInfoVillager>().agressors.Contains(gameObject))
+                            villager.GetComponent<GetInfoVillager>().agressors.Add(gameObject);
                     }
                 }
             }
