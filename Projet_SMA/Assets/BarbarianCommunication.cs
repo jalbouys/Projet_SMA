@@ -9,6 +9,8 @@ public class BarbarianCommunication : MonoBehaviour {
     public GameObject target;
     public int hp = 100;
     public bool attacked = false;
+    private int agressorsLimit = 3;
+    public int shoutingDistance = 10;
 
     /*message handler function*/
     void MessageReceived(string message)
@@ -19,7 +21,7 @@ public class BarbarianCommunication : MonoBehaviour {
             if (barbarian == null)
                 continue;
         var distance = Vector3.Distance(barbarian.transform.position, transform.position);
-        if (distance < 10 && barbarian.transform.position != transform.position)//looking for a barbarian near us
+        if (distance < shoutingDistance && barbarian.transform.position != transform.position)//looking for a barbarian near us
         {
             if (message == "help") // case of "help" message received
             {
@@ -38,8 +40,8 @@ public class BarbarianCommunication : MonoBehaviour {
                     Attack myAttack = GetComponent<Attack>();
                     if (myAttack.Target == null && barbarianTarget != null) // Case of ally attacking + and no target
                     {
-                        if ((barbarianTarget.tag == "Guard" && barbarianTarget.GetComponent<GetInfoGuard>().agressors.Count < 2) ||
-                            (barbarianTarget.tag == "Villager" && barbarianTarget.GetComponent<GetInfoVillager>().agressors.Count < 2))
+                        if ((barbarianTarget.tag == "Guard" && barbarianTarget.GetComponent<GetInfoGuard>().agressors.Count < agressorsLimit) ||
+                            (barbarianTarget.tag == "Villager" && barbarianTarget.GetComponent<GetInfoVillager>().agressors.Count < agressorsLimit))
                         {
                             myAttack.Target = barbarianTarget;
                             if (barbarianTarget.tag == "Guard")
@@ -57,6 +59,7 @@ public class BarbarianCommunication : MonoBehaviour {
     /*initialize the list of barbarians at the beginning*/
     void Start()
     {
+        agressorsLimit = GetComponent<GetInfoBarbarian>().agressorsLimit;
         foreach (GameObject otherBarbarian in GameObject.FindGameObjectsWithTag("Barbarian"))
         {
             otherBarbarians.Add(otherBarbarian);
@@ -71,7 +74,7 @@ public class BarbarianCommunication : MonoBehaviour {
         foreach (GameObject barbarian in otherBarbarians) //check all the barbarians
         {
             var distance = Vector3.Distance(barbarian.transform.position, transform.position);
-            if (distance < 10 && barbarian.transform.position != transform.position)//if other barbarian is less than 10m away...
+            if (distance < shoutingDistance && barbarian.transform.position != transform.position)//if other barbarian is less than 10m away...
             {
                 if (hp < 50 && GetComponent<GetInfoBarbarian>().agressors.Count != 0 && GetComponent<Attack>().attackingAlone)
                     barbarian.GetComponent<BarbarianCommunication>().MessageReceived("help"); //ask for help
