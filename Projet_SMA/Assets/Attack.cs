@@ -71,7 +71,6 @@ public class Attack : MonoBehaviour {
         if (target.tag == "Villager") /*case of villager, call GetInfoVillager script */
         {
             targetInfoV = target.GetComponent<GetInfoVillager>();
-            targetInfoV.agressors.Add(gameObject);
             attackingAlone = (targetInfoV.agressors.Count == 1);
             targetInfoV.hp -= 10;//remove 10HP from victim
             targetInfoV.attacker = transform.gameObject;
@@ -79,7 +78,6 @@ public class Attack : MonoBehaviour {
         else /*case of guard, call GetInfoGuard script, same action as above */
         {
             targetInfoG = target.GetComponent<GetInfoGuard>();
-            targetInfoG.agressors.Add(gameObject);
             attackingAlone = (targetInfoG.agressors.Count == 1);
             targetInfoG.hp -= 10;//remove 10HP from victim
             targetInfoG.attacker = transform.gameObject;

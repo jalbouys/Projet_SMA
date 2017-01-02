@@ -45,7 +45,8 @@ public class GetInfoBarbarian : MonoBehaviour
                 if (target == null && guard.GetComponent<GetInfoGuard>().agressors.Count < agressorsLimit) // Only choose as target if less than 2 attacking him
                 {
                     target = guard;
-                    guard.GetComponent<GetInfoGuard>().agressors.Add(gameObject);
+                    if(!guard.GetComponent<GetInfoGuard>().agressors.Contains(gameObject))
+                        guard.GetComponent<GetInfoGuard>().agressors.Add(gameObject);
                 }
             }
         }
@@ -61,7 +62,8 @@ public class GetInfoBarbarian : MonoBehaviour
                     if (villager.GetComponent<GetInfoVillager>().agressors.Count < agressorsLimit)// Only choose as target if less than 2 attacking him
                     {
                         target = villager;
-                        villager.GetComponent<GetInfoVillager>().agressors.Add(gameObject);
+                        if (!villager.GetComponent<GetInfoVillager>().agressors.Contains(gameObject))
+                            villager.GetComponent<GetInfoVillager>().agressors.Add(gameObject);
                     }
                 }
             }
@@ -105,7 +107,8 @@ public class GetInfoBarbarian : MonoBehaviour
                 if (target == null && guard.GetComponent<GetInfoGuard>().agressors.Count < agressorsLimit) // Only choose as target if less than 2 attacking him
                 {
                     target = guard;
-                    guard.GetComponent<GetInfoGuard>().agressors.Add(gameObject);
+                    if (!guard.GetComponent<GetInfoGuard>().agressors.Contains(gameObject))
+                        guard.GetComponent<GetInfoGuard>().agressors.Add(gameObject);
                 }
             }
         }
@@ -119,9 +122,10 @@ public class GetInfoBarbarian : MonoBehaviour
                 if ((target == null) || (hitVillagersOverGuards && target.tag == "Guard")) // In case target is not null and Villager 
                 {                                                                // has priority, we change for the new target
                     if (villager.GetComponent<GetInfoVillager>().agressors.Count < agressorsLimit)// Only choose as target if less than 2 attacking him
-                    { 
+                    {
                         target = villager;
-                        villager.GetComponent<GetInfoVillager>().agressors.Add(gameObject);
+                        if (!villager.GetComponent<GetInfoVillager>().agressors.Contains(gameObject))
+                            villager.GetComponent<GetInfoVillager>().agressors.Add(gameObject);
                     }
                 }
             }
