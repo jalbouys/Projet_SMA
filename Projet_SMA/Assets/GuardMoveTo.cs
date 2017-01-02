@@ -3,7 +3,13 @@ using System.Collections;
 
 /*Script related to movements of guard agents*/
 public class GuardMoveTo : MonoBehaviour {
-    
+
+    public float wanderRadius = 100;//random wandering variables
+    public float wanderTimer = 5;
+    private float timer;
+    private Vector3 villageCenter = new Vector3(-23, 0, -20);
+    private bool movingToVillage = false;
+
     public Transform[] points; //patrolling parameters
     private int destPoint = 0;
 
@@ -11,7 +17,7 @@ public class GuardMoveTo : MonoBehaviour {
     public bool attacked = false;
     private string debugMsg = "";
     private GameObject target;
-    public bool patrolling = true;
+    public bool patrolling = false;
     private bool defending = false;
 
     public string DebugMsg //debugging string, for on-screen debug
@@ -42,6 +48,8 @@ public class GuardMoveTo : MonoBehaviour {
     void Start () {
         agent = GetComponent<NavMeshAgent>();
         agent.autoBraking = false;
+        patrolling = false;
+        timer = wanderTimer;//for wandering
 
        GotoNextPoint();
     }
@@ -62,6 +70,19 @@ public class GuardMoveTo : MonoBehaviour {
         destPoint = (destPoint + 1) % points.Length;
     }
 
+    //random wander stuff
+    public static Vector3 RandomNavSphere(Vector3 origin, float dist, int layermask)
+    {
+        Vector3 randDirection = Random.insideUnitSphere * dist;
+
+        randDirection += origin;
+
+        NavMeshHit navHit;
+
+        NavMesh.SamplePosition(randDirection, out navHit, dist, layermask);
+
+        return navHit.position;
+    }
 
     void Update()
     {
@@ -74,19 +95,20 @@ public class GuardMoveTo : MonoBehaviour {
             GotoNextPoint();
        if(Target != null)
         {
+            patrolling = false;//got a target => the attack has started
             var distance = Vector3.Distance(Target.transform.position, transform.position);
-            if (distance > 30) //target too far, keep patrolling
+            if (distance > 30) //target too far, wander
             {
-                debugMsg = "patrolling...";
+                debugMsg = "giving up...";
                 GetComponent<Animator>().Play("Walk");
-                patrolling = true;
+                //patrolling = true;//dont set anymore, instead do wandering
                 defending = false;
                 GetComponent<Defend>().helping = false;
             }
-            else if (distance > 10) //target too far to defend, keep position
+            else if ((distance > 10) && (patrolling == true)) //target too far to defend, keep position
             {
                 debugMsg = "Alert intruders coming!";
-                patrolling = false;
+                //patrolling = false;
                 agent.destination = transform.position; //set the destination to current position, to force guard to stop
                 transform.LookAt(Target.transform.position); //look at the target coming
             }
@@ -95,7 +117,6 @@ public class GuardMoveTo : MonoBehaviour {
                 if (defending == false) //already defending
                 {
                     debugMsg = "defending the village!";
-                    patrolling = false;
                     defending = true;
                 }
                 MoveToTarget(Target);
@@ -103,11 +124,25 @@ public class GuardMoveTo : MonoBehaviour {
         }
         if(Target == null)
         {
-            debugMsg = "patrolling...";
-            GetComponent<Animator>().Play("Walk");
-            patrolling = true;
-            defending = false;
-            GetComponent<Defend>().helping = false;
+            if (patrolling == true)
+            {
+                debugMsg = "patrolling...";
+                GetComponent<Animator>().Play("Walk");
+                //patrolling = true;
+                defending = false;
+                GetComponent<Defend>().helping = false;
+            }
+            else
+            {
+                debugMsg = "Wandering...";
+                //agent.areaMask = 8; //village area masktimer += Time.deltaTime;
+                if (timer >= wanderTimer)
+                {
+                    Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
+                    agent.SetDestination(newPos);
+                    timer = 0;
+                }
+            }
         }
     }
 
