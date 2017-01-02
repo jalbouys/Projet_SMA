@@ -43,11 +43,19 @@ public class BarbarianCommunication : MonoBehaviour {
                         if ((barbarianTarget.tag == "Guard" && barbarianTarget.GetComponent<GetInfoGuard>().agressors.Count < agressorsLimit) ||
                             (barbarianTarget.tag == "Villager" && barbarianTarget.GetComponent<GetInfoVillager>().agressors.Count < agressorsLimit))
                         {
+                            GetComponent<GetInfoBarbarian>().target = barbarianTarget;
                             myAttack.Target = barbarianTarget;
+                            GetComponent<BarbarianMoveTo>().Target = barbarianTarget;
                             if (barbarianTarget.tag == "Guard")
-                                barbarianTarget.GetComponent<GetInfoGuard>().agressors.Add(gameObject);
+                            { 
+                                if (!barbarianTarget.GetComponent<GetInfoGuard>().agressors.Contains(gameObject))
+                                    barbarianTarget.GetComponent<GetInfoGuard>().agressors.Add(gameObject);
+                            }
                             else
-                                barbarianTarget.GetComponent<GetInfoVillager>().agressors.Add(gameObject);
+                            {
+                                if (!barbarianTarget.GetComponent<GetInfoVillager>().agressors.Contains(gameObject))
+                                    barbarianTarget.GetComponent<GetInfoVillager>().agressors.Add(gameObject);
+                            }
                         }
                     }
 

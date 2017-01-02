@@ -52,11 +52,19 @@ public class GetInfoGuard : MonoBehaviour
         villagers.Clear();
         villagers.Clear();
         agressors.RemoveAll(item => item == null);
-        if (agressors.Count != 0 && GetComponent<GuardMoveTo>().Target == null) // Defend himself when attacked
+        if (agressors.Count != 0 && target == null) // Defend himself when attacked
         {
-            GetComponent<GuardMoveTo>().Target = agressors[0];
-            GetComponent<Defend>().Target = agressors[0];
+            target = agressors[agressors.Count - 1];
         }
+
+        GameObject agr = null;
+        for(int i=0; i<agressors.Count;i++)
+        {
+            agr = agressors[i];
+            if (agr.GetComponent<Attack>().Target != gameObject) //Test if all agressors are still targeting him or not
+                agressors[i] = null;
+        }
+        agressors.RemoveAll(item => item == null); //remove all null agressors
 
         foreach (GameObject barbarian in GameObject.FindGameObjectsWithTag("Barbarian"))
         {
