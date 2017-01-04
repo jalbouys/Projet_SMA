@@ -15,10 +15,10 @@ public class ScenePreparation : MonoBehaviour {
     public GameObject guard;
     public List<GameObject> guards;
 
+
+
+
     void Start () {
-        Debug.LogWarning("Villagers: " + PlayerPrefs.GetInt("Villagers"));
-        Debug.LogWarning("Guards: " + PlayerPrefs.GetInt("Guards"));
-        Debug.LogWarning("Barbarians: " + PlayerPrefs.GetInt("Barbarians"));
 
         Random rnd = new Random();
 
@@ -59,6 +59,46 @@ public class ScenePreparation : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+        List<GameObject> barbarianTMP = new List<GameObject>();
+        foreach (GameObject barbarian in GameObject.FindGameObjectsWithTag("Barbarian"))
+        { barbarianTMP.Add(barbarian); }
+
+        Debug.Log(barbarianTMP.Count);
+
+        if(barbarianTMP.Count <= 0)
+        {
+            GetComponent<GhostFreeRoamCamera>().enabled = false;
+            GameObject hud = GameObject.Find("HUD");
+
+            GameObject vw = GameObject.Find("VillageWin");
+            vw.GetComponent<Text>().enabled = true;
+
+            GameObject button = GameObject.Find("Button");
+            button.GetComponent<Image>().enabled = true;
+            button.GetComponent<Button>().enabled = true;
+            button.GetComponentInChildren<Text>().enabled = true;
+
+            Screen.lockCursor = false;
+            Cursor.visible = true;
+        }
+
+        if (villagers.Count <= 0 && guards.Count <= 0)
+        {
+            GetComponent<GhostFreeRoamCamera>().enabled = false;
+            GameObject hud = GameObject.Find("HUD");
+
+            GameObject vw = GameObject.Find("BarbarianWin");
+            vw.GetComponent<Text>().enabled = true;
+
+            GameObject button = GameObject.Find("Button");
+            button.GetComponent<Image>().enabled = true;
+            button.GetComponent<Button>().enabled = true;
+            button.GetComponentInChildren<Text>().enabled = true;
+
+            Screen.lockCursor = false;
+            Cursor.visible = true;
+        }
+
     }
 	        
 }

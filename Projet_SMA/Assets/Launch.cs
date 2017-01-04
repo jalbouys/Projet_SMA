@@ -6,6 +6,7 @@ public class Launch : MonoBehaviour {
 
     public void loadByIndex(int sceneIndex)
     {
+        Debug.Log("Load scene");
         SceneManager.LoadScene(sceneIndex);
     }
 }
