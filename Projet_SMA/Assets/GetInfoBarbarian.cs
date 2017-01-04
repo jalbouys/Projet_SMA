@@ -23,7 +23,7 @@ public class GetInfoBarbarian : MonoBehaviour
     public int agressorsLimit = 3;
 
     //senses parameters
-    public int fieldOfViewRange = 60; 
+    public int fieldOfViewRange = 120; 
     public int sightRange = 40;
     public int smellRange = 5;
 
@@ -108,7 +108,7 @@ public class GetInfoBarbarian : MonoBehaviour
             if (CanSeeTarget(guard) || CanSmellTarget(guard)) //looking for on-sight guards
             {
                 guards.Add(guard);
-                if (target == null && guard.GetComponent<GetInfoGuard>().agressors.Count < agressorsLimit) // Only choose as target if less than 2 attacking him
+                if ((target == null) && guard.GetComponent<GetInfoGuard>().agressors.Count < agressorsLimit) // Only choose as target if less than 2 attacking him
                 {
                     target = guard;
                     if (!guard.GetComponent<GetInfoGuard>().agressors.Contains(gameObject))
@@ -137,19 +137,10 @@ public class GetInfoBarbarian : MonoBehaviour
         //look for the chest, depending on the objective
         if (CanSeeTarget(chest) && findChestMode)
             target = chest;
-
-        if ((villagers.Count == 0) && (guards.Count == 0))//Did not see anybody
-        { 
-            GetComponent<BarbarianMoveTo>().Target = null;
-            GetComponent<Attack>().Target = null;
-            GetComponent<BarbarianCommunication>().target = null;
-        }
-        else
-        {
-            GetComponent<BarbarianMoveTo>().Target = target;
-            GetComponent<Attack>().Target = target;
-            GetComponent<BarbarianCommunication>().target = target;
-        }
+        
+         GetComponent<BarbarianMoveTo>().Target = target;
+         GetComponent<Attack>().Target = target;
+         GetComponent<BarbarianCommunication>().target = target;
 
         // In case of no hp left, we destroy the object and all the pointers to it...
         if (hp <= 0)
@@ -197,6 +188,12 @@ public class GetInfoBarbarian : MonoBehaviour
     {
         return (Vector3.Distance(transform.position, target.transform.position) < smellRange);
 
+    }
+    
+    /* tells whether a given object is closer than another one or not*/
+    bool IsCloser(GameObject current, GameObject prev)
+    {
+        return (Vector3.Distance(current.transform.position, transform.position) < Vector3.Distance(prev.transform.position, transform.position));
     }
 
 

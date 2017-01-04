@@ -13,12 +13,12 @@ public class GetInfoVillager : MonoBehaviour
     public List<GameObject> guards = new List<GameObject>();
     public List<GameObject> villagers = new List<GameObject>();
     public List<GameObject> agressors = new List<GameObject>();
-    public int hp = 100;
+    public int hp = 40;
     public GameObject target;//or target pos?
     public GameObject attacker = null;
 
     //senses parameters
-    public int fieldOfViewRange = 60;
+    public int fieldOfViewRange = 120;
     public int sightRange = 40;
     public int smellRange = 5;
 
@@ -65,7 +65,7 @@ public class GetInfoVillager : MonoBehaviour
         foreach (GameObject villager in GameObject.FindGameObjectsWithTag("Villager"))
         { villagers.Add(villager); }
 
-        if(barbarians.Count > 3) //If more than 3 barbarians seen, understand that village is being invaded
+        if(barbarians.Count > 5) //If more than 5 barbarians seen, understand that village is being invaded
         {
             GetComponent<VillagerMoveTo>().villageInvaded = true;
         }

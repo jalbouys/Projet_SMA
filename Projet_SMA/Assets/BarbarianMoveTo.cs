@@ -13,8 +13,11 @@ public class BarbarianMoveTo : MonoBehaviour {
     private string debugMsg = "";
     private Vector3 previousTargetPosition;
     private Vector3 villageCenter = new Vector3(-23, 0, -20);
+    private Vector3 villageEntrance = new Vector3(-18,0,18);
     private bool movingToVillage = false;
 
+    private bool gotTheChest = false;
+    private bool movingWithChest = false;
     private GameObject target = null;
 
     public GameObject Target //agent's target
@@ -54,7 +57,23 @@ public class BarbarianMoveTo : MonoBehaviour {
 	void Update () {
         
         Vector3 fwd = transform.TransformDirection(Vector3.forward);
-        if (Target != null)
+        if (gotTheChest)
+        {
+            debugMsg = "Bringing chest outside!";
+            if (!movingWithChest)
+            {
+                agent.SetDestination(villageEntrance);
+                transform.LookAt(villageEntrance);
+                movingWithChest = true;
+            }
+            else
+            {
+                GameObject chest = GameObject.FindGameObjectWithTag("Chest");
+                chest.transform.position = new Vector3(transform.position.x,chest.transform.position.y,transform.position.z - 5);
+                chest.transform.LookAt(transform.position);
+            }
+        }
+        else if (Target != null)
         {
             Attack barbAttack = GetComponent<Attack>();
             if (!barbAttack.helping && !barbAttack.attacking) //test to avoid message erasing
@@ -63,11 +82,16 @@ public class BarbarianMoveTo : MonoBehaviour {
             }
             MoveToTarget(Target); //move towards the target
             movingToVillage = false; //make sure that we are not moving towards village anymore
+            if (target.tag == "Chest" && Vector3.Distance(transform.position, target.transform.position) < 5)
+            {
+                gotTheChest = true;
+                Target = null;
+            }
         }
         else if (movingToVillage)
         {
             debugMsg = "Moving towards village";
-            if (Vector3.Distance(transform.position, villageCenter) < 4)
+            if (Vector3.Distance(transform.position, villageCenter) < 4 || transform.position.z < (villageCenter.z + 10) )
             {
                 movingToVillage = false;
                 agent.areaMask = 8; //village area mask

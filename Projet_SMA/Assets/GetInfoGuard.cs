@@ -18,7 +18,7 @@ public class GetInfoGuard : MonoBehaviour
     public GameObject attacker;
 
     //senses parameters
-    public int fieldOfViewRange = 60;
+    public int fieldOfViewRange = 120;
     public int sightRange = 40;
     public int smellRange = 5;
 

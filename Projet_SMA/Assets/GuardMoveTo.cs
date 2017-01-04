@@ -96,28 +96,26 @@ public class GuardMoveTo : MonoBehaviour {
 
        if(Target != null)
         {
-            patrolling = false;//got a target => the attack has started
             var distance = Vector3.Distance(Target.transform.position, transform.position);
-            if (distance > 30) //target too far, wander
+            if (distance > 30 && !patrolling) //target too far, wander
             {
                 debugMsg = "giving up...";
                 GetComponent<Animator>().Play("Walk");
-                //patrolling = true;//dont set anymore, instead do wandering
                 defending = false;
                 GetComponent<Defend>().helping = false;
             }
             else if ((distance > 10) && (patrolling == true)) //target too far to defend, keep position
             {
                 debugMsg = "Alert intruders coming!";
-                //patrolling = false;
                 agent.destination = transform.position; //set the destination to current position, to force guard to stop
                 transform.LookAt(Target.transform.position); //look at the target coming
             }
             else
             {
-                if (defending == false) //already defending
+                if (defending == false) //not already defending
                 {
                     debugMsg = "defending the village!";
+                    patrolling = false;
                     defending = true;
                 }
                 MoveToTarget(Target);
@@ -140,6 +138,7 @@ public class GuardMoveTo : MonoBehaviour {
 
                 if (agent.areaMask != 8)//not in village yet
                 {
+                    debugMsg = "Going inside the village...";
                     if (Vector3.Distance(transform.position, villageCenter) < 10)
                     {
                         agent.areaMask = 8; //village area mask
