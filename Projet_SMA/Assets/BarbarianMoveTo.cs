@@ -69,8 +69,10 @@ public class BarbarianMoveTo : MonoBehaviour {
             else
             {
                 GameObject chest = GameObject.FindGameObjectWithTag("Chest");
-                chest.transform.position = new Vector3(transform.position.x,chest.transform.position.y,transform.position.z - 5);
-                chest.transform.LookAt(transform.position);
+                chest.transform.position = new Vector3(transform.position.x,transform.position.y + 2,transform.position.z + 2);
+                //chest.transform.LookAt(transform.position);
+                if (Vector3.Distance(villageEntrance, chest.transform.position) < 5)
+                    chest.GetComponent<ChestInfo>().hasBeenStolen = true;
             }
         }
         else if (Target != null)
@@ -84,8 +86,15 @@ public class BarbarianMoveTo : MonoBehaviour {
             movingToVillage = false; //make sure that we are not moving towards village anymore
             if (target.tag == "Chest" && Vector3.Distance(transform.position, target.transform.position) < 5)
             {
-                gotTheChest = true;
+                GameObject chest = GameObject.FindGameObjectWithTag("Chest");
+                if (chest.GetComponent<ChestInfo>().carrier == null)
+                {
+                    gotTheChest = true;
+                    chest.GetComponent<ChestInfo>().carrier = gameObject;
+                }
                 Target = null;
+                GetComponent<Attack>().Target = null;
+                GetComponent<GetInfoBarbarian>().target = null;
             }
         }
         else if (movingToVillage)

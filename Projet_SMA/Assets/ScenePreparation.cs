@@ -14,7 +14,7 @@ public class ScenePreparation : MonoBehaviour {
     public List<GameObject> villagers;
     public GameObject guard;
     public List<GameObject> guards;
-
+    private bool chestStolen = false;
 
 
 
@@ -60,12 +60,26 @@ public class ScenePreparation : MonoBehaviour {
     void Update()
     {
         List<GameObject> barbarianTMP = new List<GameObject>();
+        List<GameObject> villagerTMP = new List<GameObject>();
+        List<GameObject> guardTMP = new List<GameObject>();
         foreach (GameObject barbarian in GameObject.FindGameObjectsWithTag("Barbarian"))
-        { barbarianTMP.Add(barbarian); }
+        {
+            barbarianTMP.Add(barbarian);
+        }
 
-        Debug.Log(barbarianTMP.Count);
+        foreach (GameObject villager in GameObject.FindGameObjectsWithTag("Villager"))
+        {
+            villagerTMP.Add(villager);
+        }
 
-        if(barbarianTMP.Count <= 0)
+        foreach (GameObject guard in GameObject.FindGameObjectsWithTag("Guard"))
+        {
+            guardTMP.Add(guard);
+        }
+
+
+        chestStolen = GameObject.FindGameObjectWithTag("Chest").GetComponent<ChestInfo>().hasBeenStolen;
+        if (barbarianTMP.Count <= 0)
         {
             GetComponent<GhostFreeRoamCamera>().enabled = false;
             GameObject hud = GameObject.Find("HUD");
@@ -82,7 +96,7 @@ public class ScenePreparation : MonoBehaviour {
             Cursor.visible = true;
         }
 
-        if (villagers.Count <= 0 && guards.Count <= 0)
+        if ((villagerTMP.Count <= 0 && guardTMP.Count <= 0) || chestStolen)
         {
             GetComponent<GhostFreeRoamCamera>().enabled = false;
             GameObject hud = GameObject.Find("HUD");

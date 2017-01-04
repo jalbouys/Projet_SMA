@@ -91,6 +91,11 @@ public class GetInfoBarbarian : MonoBehaviour
 
         GameObject chest = GameObject.FindGameObjectWithTag("Chest");
 
+        if (chest.GetComponent<ChestInfo>().carrier != null)
+            findChestMode = false;
+        else
+            findChestMode = true;
+
         barbarians.Clear();
         guards.Clear();
         villagers.Clear();
@@ -137,7 +142,9 @@ public class GetInfoBarbarian : MonoBehaviour
         //look for the chest, depending on the objective
         if (CanSeeTarget(chest) && findChestMode)
             target = chest;
-        
+        else if (barbarians.Count == 0 && villagers.Count == 0) //case did not see anybody
+            target = null;
+
          GetComponent<BarbarianMoveTo>().Target = target;
          GetComponent<Attack>().Target = target;
          GetComponent<BarbarianCommunication>().target = target;
